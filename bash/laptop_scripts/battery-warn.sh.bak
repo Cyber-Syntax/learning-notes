@@ -1,0 +1,66 @@
+#!/bin/bash
+### Battery Warning Script
+
+while true; 
+do
+  # Get the battery percentage
+  battery_percent=$(acpi -b | grep -P -o '[0-9]+(?=%)')
+
+  # get ac status
+  ac_status=$(acpi | awk '{print $3}' | cut -d ',' -f1)
+
+  # if charging do nothing
+  if [ "$ac_status" == "Charging" ]; then
+    sleep 300
+    continue
+  fi
+
+  # if battery %20 normal notification, if %10 critical notification
+  if [ $battery_percent -le 20 ]; then
+    notify-send -u critical "Battery Warning" "Battery is at $battery_percent%. Please plug in the charger."
+  elif [ $battery_percent -le 10 ]; then
+    notify-send -u critical "Battery Warning" "Battery is at $battery_percent%. Please plug in the charger."
+  fi
+
+  # Sleep arrangement
+  # sleep more if battery is high, less if battery is low, if battery %5 then sleep 1 minute
+  if [ $battery_percent -le 5 ]; then
+    sleep 60
+  elif [ $battery_percent -le 10 ]; then
+    sleep 150
+  elif [ $battery_percent -le 20 ]; then
+    sleep 300
+  elif [ $battery_percent -le 30 ]; then
+    sleep 300
+  elif [ $battery_percent -le 40 ]; then
+    sleep 600
+  # if battery 50 sleep 15 min
+  elif [ $battery_percent -le 50 ]; then
+    sleep 900
+  elif [ $battery_percent -le 60 ]; then
+    sleep 900
+  # if battery > 70 sleep 20 min
+  elif [ $battery_percent -le 70 ]; then
+    sleep 1200
+  else
+    # if battery > 70 sleep 30 min
+    sleep 1800
+  fi
+
+  # add logic periodically check the battery status, if some app consume more battery
+  for ((i=0; i<6; i++)); do
+    # Get the battery percentage
+    battery_percent=$(acpi -b | grep -P -o '[0-9]+(?=%)')
+
+    # send notify if battery is less than 20
+    if [ $battery_percent -le 20 ]; then
+      notify-send -u critical "Battery Warning" "Battery is at $battery_percent%. Please plug in the charger."
+    elif [ $battery_percent -le 10 ]; then
+      notify-send -u critical "Battery Warning" "Battery is at $battery_percent%. Please plug in the charger."
+    fi
+
+    # Sleep 5 minutes before checking again
+    sleep 300
+  done
+
+done

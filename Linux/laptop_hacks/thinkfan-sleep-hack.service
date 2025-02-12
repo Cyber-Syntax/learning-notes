@@ -1,0 +1,12 @@
+[Unit]
+Description=Set fan to auto so BIOS can shut off fan during S2 sleep
+Before=sleep.target
+After=thinkfan-sleep.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/logger -t '%N' "Setting /proc/acpi/ibm/fan to 'level auto'"
+ExecStart=/usr/bin/bash -c '/usr/bin/echo "level auto" > /proc/acpi/ibm/fan'
+
+[Install]
+WantedBy=sleep.target

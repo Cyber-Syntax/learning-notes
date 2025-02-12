@@ -1,0 +1,25 @@
+# /etc/anacrontab: configuration file for anacron
+
+# See anacron(8) and anacrontab(5) for details.
+
+SHELL=/bin/sh
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+MAILTO=""
+# the maximal random delay added to the base delay of the jobs
+RANDOM_DELAY=45
+# the jobs will be started during the following hours only
+#START_HOURS_RANGE=0-23
+
+#period in days   delay in minutes   job-identifier   command
+#1	5	cron.daily		nice run-parts /etc/cron.daily
+
+
+# home dir backup via borgbackup
+@daily 10 cron.daily /bin/bash /home/cyber-syntax/Documents/repository/borg_script/laptop-home_borgbackup.sh >> /home/cyber-syntax/Documents/repository/borg_script/laptop-anacron_log 2>&1
+
+# root dir
+@daily  10 	cron.daily 		/bin/bash 	/home/cyber-syntax/Documents/repository/borg_script/laptop-boot_borgbackup.sh >> /home/cyber-syntax/Documents/repository/borg_script/laptop-boot_anacron_log 2>&1
+
+
+7	25	cron.weekly		nice run-parts /etc/cron.weekly
+@monthly 45	cron.monthly		nice run-parts /etc/cron.monthly

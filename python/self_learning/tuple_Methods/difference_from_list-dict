@@ -1,0 +1,25 @@
+Mutation:    
+The biggest difference between tuples and the other two data types is 
+    that tuples are immutable, while lists and dictionaries are mutable. 
+    This means that once you create a tuple, you cannot change the values 
+    it contains: you cannot add, remove, or modify the values of any element 
+    in the tuple. On the other hand, you can modify the values in a list or 
+    dictionary by adding, removing, or modifying elements.
+
+Indexing: 
+Both tuples and lists are sequence types, which means that you 
+    can access their elements using indexing. However, dictionaries are not sequence 
+    types, so you cannot access their elements using indexing. Instead, you use keys 
+    to look up values in a dictionary.
+
+Order: 
+Both tuples and lists are ordered collections of elements, which means 
+    that the elements are stored in a specific order and you can access them using 
+    their index. Dictionaries, on the other hand, are unordered collections 
+    of key-value pairs, so the elements are not stored in any particular order.
+
+Syntax: 
+Tuples and lists are both created using square brackets, 
+    but tuples use parentheses: (1, 2, 3) is a tuple, while [1, 2, 3] is a list. 
+    Dictionaries are created using curly braces: {1: 'a', 2: 'b', 3: 'c'} 
+    is a dictionary.

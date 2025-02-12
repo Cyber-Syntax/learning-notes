@@ -1,0 +1,19 @@
+.       any character except a newline
+
+*       0 or more repetitions (tekrarlar)
+
++       1 or more repetitions
+
+?       0 or 1 repetition
+
+{m}     m repetitions
+
+{m,n}   m-n repetitions
+
+^       Matches the start of the string.
+
+$       Matches the end of the string or just before the newline at the end of the string.
+
+[]      Indicates a set of characters.
+
+[^]     Complementing the set / if you din't want you more than ones "@" -> [^@]

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Markdown Not Uygulamasi</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="sidebar">
+      <h1>Notlar</h1>
+      <ul id="note-titles"></ul>
+    </div>
+    <div class="main">
+      <form>
+        <input type="text" id="note-title" placeholder="Başlık...">
+        <textarea id="note-content" placeholder="Notunuzu buraya yazın..."></textarea>
+        <button type="button" id="save-note-btn">Kaydet</button>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+

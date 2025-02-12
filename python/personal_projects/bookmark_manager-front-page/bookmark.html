@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    /* CSS styles for the bookmark manager */
+
+    /* Add some padding and a border to the bookmarks container */
+    .bookmarks {
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    /* Style the bookmark links */
+    .bookmark a {
+      display: block;
+      padding: 5px;
+      margin-bottom: 5px;
+      text-decoration: none;
+      color: #000;
+    }
+
+    /* Style the bookmark folders */
+    .bookmark-folder {
+      padding-left: 20px;
+    }
+
+    /* Style the "Add bookmark" form */
+    .add-bookmark {
+      margin-top: 10px;
+    }
+
+    /* Style the "Delete" button */
+    .delete-bookmark {
+      float: right;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Bookmark Manager</h1>
+
+  <div class="bookmarks">
+    <div class="bookmark-folder">
+      <h2>Favorites</h2>
+      <div class="bookmark">
+        <a href="https://google.com">Google</a>
+        <button class="delete-bookmark">Delete</button>
+      </div>
+      <div class="bookmark">
+        <a href="https://facebook.com">Facebook</a>
+        <button class="delete-bookmark">Delete</button>
+      </div>
+    </div>
+  </div>

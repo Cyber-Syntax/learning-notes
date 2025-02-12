@@ -1,0 +1,17 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Bookmarks</title>
+    <style>
+      /* CSS styles go here */
+    </style>
+  </head>
+  <body>
+    <h1>Bookmarks</h1>
+    <ul>
+      {% for bookmark in bookmarks %}
+        <li><a href="{{ bookmark.url }}">{{ bookmark.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+#bookmark-manager {
+    width: 600px;
+    margin: 0 auto;
+    font-family: sans-serif;
+  }
+  
+  #bookmark-manager h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  #folder-tree {
+    list-style: none;
+    padding-left:0%;
+  }

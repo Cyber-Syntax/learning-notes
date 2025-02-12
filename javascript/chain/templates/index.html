@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Habit Tracker</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+	<div class="container">
+		
+		<h1>Habit Tracker</h1>
+			<table>
+
+				<td> Date </td>
+			{% for habit in items %}
+				<tr>
+					<td>
+						<span class="habit">{{ habit["name"] }}</span>
+						<input type="text" class="edit-input" style="display:none;" />
+						<button class="edit-button" onclick="editHabit(this)">Edit</button>
+					</td>
+					<td>{{ habit["status"] }}</td>
+					<td><button class="button" onclick="deleteRow(this)">Delete</button></td>
+				</tr>
+				{% endfor %}
+
+			</table>
+	<div class="buttons">
+		<button class="button" onclick="addRow()">Add Row</button>
+		<button class="button" onclick="addColumn()">Add Column</button>	
+		<button class="button" onclick="saveData()">Save</button>
+	</div>	
+</div>
+</body>
+</html>

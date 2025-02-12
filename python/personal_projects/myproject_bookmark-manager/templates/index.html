@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<head>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<h1>Bookmark Manager</h1>
+
+<h2>Folders</h2>
+<ul>
+    {% for folder in bookmarks.folders %}
+        <li>{{ folder }}
+            <form action="/deletefolder/{{ folder.id }}" method="POST">
+                <input type="submit" value="Delete Folder">
+            </form>
+            <ul>
+                {% for subfolder in bookmarks.folders[folder].folders %}
+                    <li>{{ subfolder }}
+                        <form action="/deletefolder/{{ subfolder.id }}" method="POST">
+                            <input type="submit" value="Delete Folder">
+                        </form>
+                        <ul>
+                            {% for bookmark in bookmarks.folders[folder].folders[subfolder].bookmarks %}
+                                <li>
+                                    <a href="{{ bookmark.url }}">{{ bookmark.description }}</a>
+                                    <form action="/delete/{{ bookmark.id }}" method="POST">
+                                        <input type="submit" value="Delete Bookmark">
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+                {% for bookmark in bookmarks.folders[folder].bookmarks %}
+                    <li>
+                        <a href="{{ bookmark.url }}">{{ bookmark.description }}</a>
+                        <form action="/delete/{{ bookmark.id }}" method="POST">
+                            <input type="submit" value="Delete Bookmark">
+                        </form>
+                    </li>
+                {% endfor %}
+</ul>
+
+<h2>Bookmarks</h2>
+<ul>
+    {% for bookmark in bookmarks.bookmarks %}
+        <li><a href="{{ bookmark.url }}">{{ bookmark.description }}</a></li>
+    {% endfor %}
+</ul>
+
+<h2>Add Bookmark</h2>
+<form action="/add" method="POST">
+    URL: <input type="text" name="url"><br>
+    Description: <input type="text" name="description"><br>
+    <input type="submit" value="Add Bookmark">
+</form>
+
+<h2>Add Folder</h2>
+<form action="/addfolder" method="POST">
+    Name: <input type="text" name="name"><br>
+    <input type="submit" value="Add Folder">
+</form>
+
+<h2>Move Bookmark</h2>
+<form action="/move" method="POST">
+    URL: <input type="text" name="url"><br>
+    Current Folder: <input type="text" name="current_folder"><br>
+    Destination Folder: <input type="text" name="destination_folder"><br>
+    <input type="submit" value="Move Bookmark">
+</form>

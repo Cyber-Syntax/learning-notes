@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My First Web Page</title>
+<script src="hello.js"></script>
+
+</head>
+
+<body>
+<h1>Sum two number</h1>
+Enter first number: <input type="text" id="num1" />
+Enter second number: <input type="text" id="num2" />
+<input type="button" value="Add" onclick="add()" />
+
+<h1>What is your name? </h1>
+<input type="text" value="" id="name" />
+<input type="button" value="Save" onclick="askName()" />
+<!-- Create a table and save the credentials numbers and user name-->
+<!--\n-->
+<table border="1">
+<tr> 
+<td>Number 1</td>
+<td>Number 2</td>
+<td>User Name</td>
+</tr>
+</table>
+<table border="1">
+<tr>
+<td id="num1"></td>
+<td id="num2"></td>
+<td id="name"></td>
+</tr>
+</table>
+<!-- This is not node.js, This means using client.-->
+<script>
+    // add 2 numbers function and save the result in the table
+    function add() {
+        var num1 = document.getElementById("num1").value;
+        var num2 = document.getElementById("num2").value;
+        var result = parseInt(num1) + parseInt(num2);
+        document.getElementById("num1") = num1;
+        document.getElementById("num2") = num2;
+        document.getElementById("name") = result;        
+    }
+    // ask user name and save it in the table
+    function askName() {
+        // add user name to the table when he write to textbox
+        var name = document.getElementById("name").value;
+        document.getElementById("name") = name;        
+    }
+
+
+</script>
+
+</body>
+
+</html>

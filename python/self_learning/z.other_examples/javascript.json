@@ -1,0 +1,19 @@
+class Person {
+    constructor() {
+      this.name = "John";
+      this.age = 36;
+      this.country = "Norway";
+    }
+  }
+  
+  Person.prototype.toString = function() {
+    if ('age' in this) {
+      return `${this.name} is ${this.age} years old and lives in ${this.country}`;
+    } else {
+      return `${this.name} lives in ${this.country}`;
+    }
+  };
+  
+  const p = new Person();
+  delete p.age;
+  console.log(p.toString());
