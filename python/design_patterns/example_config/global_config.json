@@ -1,0 +1,6 @@
+{
+  "download_dir": "./python/design_patterns/downloads",
+  "auto_update": true,
+  "update_check_interval_days": 7,
+  "default_arch": "x86_64"
+}

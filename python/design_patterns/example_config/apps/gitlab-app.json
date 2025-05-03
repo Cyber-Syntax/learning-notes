@@ -1,0 +1,18 @@
+{
+  "name": "gitlab-app",
+  "data": {
+    "name": "gitlab-app",
+    "arch_keyword": "x86_64",
+    "download_url": "https://gitlab.com/owner/repo/-/releases/v1.0/app.AppImage",
+    "sha_download_url": "https://gitlab.com/owner/repo/-/releases/v1.0/app.AppImage.sha256",
+    "version": "2.0",
+    "display_name": "GitLab App",
+    "sha_file_name": "app.AppImage.sha256",
+    "owner": "owner",
+    "repo": "repo"
+  },
+  "app_settings": {
+    "auto_update": false,
+    "launch_at_startup": true
+  }
+}

@@ -2,20 +2,20 @@ class Bookmark:
     def __init__(self, title, url):
         self.title = title
         self.url = url
-    
+
     def __str__(self):
         return f"{self.title} ({self.url})"
 
 class BookmarkManager:
     def __init__(self):
         self.bookmarks = []
-    
+
     def add_bookmark(self, bookmark):
         self.bookmarks.append(bookmark)
-    
+
     def remove_bookmark(self, bookmark):
         self.bookmarks.remove(bookmark)
-    
+
     def get_bookmarks(self):
         return self.bookmarks
 
