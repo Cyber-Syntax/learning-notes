@@ -1,0 +1,32 @@
+{
+  "owner": "pbek",
+  "repo": "qownnotes",
+  "version": "v25.7.8",
+  "prerelease": false,
+  "assets": [
+    {
+      "name": "QOwnNotes-x86_64-Qt6.AppImage",
+      "digest": "sha256:c4f36a17fd7343517c7d5ffcb6547483adf7b39ee32a130c8f6e7a5be619c84a",
+      "size": 48843256,
+      "browser_download_url": "https://github.com/pbek/QOwnNotes/releases/download/v25.7.8/QOwnNotes-x86_64-Qt6.AppImage"
+    },
+    {
+      "name": "QOwnNotes-x86_64-Qt6.AppImage.sha256sum",
+      "digest": "sha256:4756efb1b04895446780c900967d5f4de2d9d6aad63499718da0d61028f38732",
+      "size": 96,
+      "browser_download_url": "https://github.com/pbek/QOwnNotes/releases/download/v25.7.8/QOwnNotes-x86_64-Qt6.AppImage.sha256sum"
+    },
+    {
+      "name": "QOwnNotes-x86_64.AppImage",
+      "digest": "sha256:a9c6275364727411d98c2bb92f1809397dc188283e1e8709b5eabfe80e7a576b",
+      "size": 43317752,
+      "browser_download_url": "https://github.com/pbek/QOwnNotes/releases/download/v25.7.8/QOwnNotes-x86_64.AppImage"
+    },
+    {
+      "name": "QOwnNotes-x86_64.AppImage.sha256sum",
+      "digest": "sha256:1b7d30334df2ed4547baaf538dc2b32611a35711960c43eb32366eb0a02b6d4b",
+      "size": 92,
+      "browser_download_url": "https://github.com/pbek/QOwnNotes/releases/download/v25.7.8/QOwnNotes-x86_64.AppImage.sha256sum"
+    }
+  ]
+}
