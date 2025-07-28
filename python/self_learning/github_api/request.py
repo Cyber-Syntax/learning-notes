@@ -1,4 +1,8 @@
+import hashlib
+import os
+from pathlib import Path
 from typing import Any, TypedDict, cast
+from urllib.parse import urlparse
 
 import orjson
 import requests
@@ -9,6 +13,14 @@ class GitHubAsset(TypedDict):
     size: int
     digest: str
     browser_download_url: str
+
+
+class AppimageAsset(GitHubAsset):
+    pass
+
+
+class ChecksumFile(GitHubAsset):
+    pass
 
 
 class GitHubReleaseDetails(TypedDict):
@@ -61,7 +73,7 @@ class GitHubReleaseFetcher:
 
     def filter_appimage_assets(self, assets: list[dict[str, Any]]) -> list[GitHubAsset]:
         filtered_assets: list[GitHubAsset] = []
-        
+
         for asset in assets:
             typed_asset = self.to_github_asset(asset)
 
@@ -72,7 +84,9 @@ class GitHubReleaseFetcher:
                 checksum_variants: list[str] = [f"{typed_asset['name']}.sha256sum"]
 
                 for variant in checksum_variants:
-                    checksum_asset = next((a for a in assets if a.get("name") == variant), None)
+                    checksum_asset = next(
+                        (a for a in assets if a.get("name") == variant), None
+                    )
                     typed_checksum = (
                         self.to_github_asset(checksum_asset) if checksum_asset else None
                     )
@@ -88,16 +102,80 @@ class GitHubReleaseFetcher:
             file.write(orjson.dumps(data, option=orjson.OPT_INDENT_2))
 
 
+class Verifier:
+    def __init__(self, asset: GitHubAsset, file_path: Path) -> None:
+        self.asset: GitHubAsset = asset
+        self.file_path: Path = file_path
+
+    def get_expected_hash(self) -> str:
+        prefix, _, hash_str = self.asset["digest"].partition(":")
+        if prefix != "sha256":
+            raise ValueError(f"Unsupported hash type: {prefix}")
+        return hash_str
+
+    def compute_actual_hash(self) -> str:
+        sha256 = hashlib.sha256()
+        with open(self.file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+
+    def verify(self) -> bool:
+        expected: str = self.get_expected_hash()
+        actual: str = self.compute_actual_hash()
+        print(f"🔍 Expected Digest: {expected}")
+        print(f"🔍 Actual Digest:   {actual}")
+        if expected != actual:
+            raise ValueError(f"Digest mismatch!\nExpected: {expected}\nActual:   {actual}")
+        print("✅ SHA256 digest verified successfully.")
+        return True
+
+
+class Installer:
+    def __init__(self, asset: GitHubAsset) -> None:
+        self.asset: GitHubAsset = asset
+        self.file_name: str = Path(urlparse(asset["browser_download_url"]).path).name
+
+    def download(self) -> Path:
+        print(f"⬇️ Downloading {self.asset['name']} ...")
+        response = requests.get(self.asset["browser_download_url"], stream=True)
+        response.raise_for_status()
+        with open(self.file_name, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+        print(f"✅ Downloaded to ./{self.file_name}")
+        return Path(self.file_name)
+
+    def make_executable(self, path: Path) -> None:
+        os.chmod(path, 0o755)
+        print(f"🛠 Made executable: {path.resolve()}")
+
+    def install(self) -> Path:
+        path = self.download()
+        self.make_executable(path)
+        return path
+
+
 if __name__ == "__main__":
-    owner = "pbek"
-    repo = "qownnotes"
+    owner = "AppFlowy-IO"
+    repo = "AppFlowy"
     output_file = "latest_release_details.json"
 
-    fetcher: GitHubReleaseFetcher = GitHubReleaseFetcher(owner, repo)
+    fetcher = GitHubReleaseFetcher(owner, repo)
     try:
-        release_data: GitHubReleaseDetails = fetcher.fetch_latest_release()
-        asset_details: GitHubReleaseDetails = fetcher.extract_asset_details(release_data)
+        release_data = fetcher.fetch_latest_release()
+        asset_details = fetcher.extract_asset_details(release_data)
         fetcher.write_to_file(asset_details, output_file)
-        print(f"Asset details written to {output_file}")
+        print(f"📝 Asset details written to {output_file}")
+
+        for asset in asset_details["assets"]:
+            if asset["name"].endswith(".AppImage"):
+                installer = Installer(asset)
+                appimage_path = installer.install()
+
+                verifier = Verifier(asset, appimage_path)
+                verifier.verify()
+                break
+
     except Exception as e:
-        print(str(e))
+        print(f"❌ Error: {e}")

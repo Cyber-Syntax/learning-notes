@@ -1,3 +1,7 @@
+# Custom
+*.AppImage
+
+
 ##### C++
 # Prerequisites
 *.d
