@@ -1,10 +1,15 @@
+import argparse
+import getpass
 import hashlib
 import os
+import sys
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, TypedDict, cast
 from urllib.parse import urlparse
 
-import orjson
+import keyring
 import requests
 
 
@@ -13,14 +18,6 @@ class GitHubAsset(TypedDict):
     size: int
     digest: str
     browser_download_url: str
-
-
-class AppimageAsset(GitHubAsset):
-    pass
-
-
-class ChecksumFile(GitHubAsset):
-    pass
 
 
 class GitHubReleaseDetails(TypedDict):
@@ -33,31 +30,16 @@ class GitHubReleaseDetails(TypedDict):
 
 class GitHubReleaseFetcher:
     def __init__(self, owner: str, repo: str) -> None:
-        self.owner: str = owner
-        self.repo: str = repo
-        self.api_url: str = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
+        self.owner = owner
+        self.repo = repo
+        self.auth_manager = GitHubAuthManager()
+        self.api_url = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
 
     def fetch_latest_release(self) -> GitHubReleaseDetails:
-        response: requests.Response = requests.get(self.api_url)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            raise Exception(
-                f"Failed to fetch the latest release. Status code: {response.status_code}"
-            )
-
-    def extract_asset_details(
-        self, release_data: GitHubReleaseDetails
-    ) -> GitHubReleaseDetails:
-        return {
-            "owner": self.owner,
-            "repo": self.repo,
-            "version": release_data.get("tag_name", ""),
-            "prerelease": release_data.get("prerelease", False),
-            "assets": self.filter_appimage_assets(
-                cast(list[dict[str, Any]], release_data.get("assets", []))
-            ),
-        }
+        headers = GitHubAuthManager.apply_auth({})
+        response: Response = requests.get(url=self.api_url, headers=headers)
+        response.raise_for_status()
+        return response.json()
 
     def to_github_asset(self, asset: dict[str, Any]) -> GitHubAsset | None:
         try:
@@ -67,51 +49,94 @@ class GitHubReleaseFetcher:
                 "size": cast(int, asset.get("size")),
                 "browser_download_url": cast(str, asset.get("browser_download_url")),
             }
-        except (KeyError, TypeError):
-            print("Failed to convert asset to GitHubAsset")
+        except Exception:
             return None
 
-    def filter_appimage_assets(self, assets: list[dict[str, Any]]) -> list[GitHubAsset]:
-        filtered_assets: list[GitHubAsset] = []
-
+    def extract_appimage_asset(self, release_data: dict[str, Any]) -> GitHubAsset | None:
+        assets = cast(list[dict[str, Any]], release_data.get("assets", []))
         for asset in assets:
-            typed_asset = self.to_github_asset(asset)
+            if asset.get("name", "").endswith(".AppImage"):
+                return self.to_github_asset(asset)
+        return None
 
-            # Check if the asset is valid and ends with ".AppImage"
-            if typed_asset and typed_asset["name"].endswith(".AppImage"):
-                filtered_assets.append(typed_asset)
 
-                checksum_variants: list[str] = [f"{typed_asset['name']}.sha256sum"]
+# Global lock to synchronize terminal output
+progress_lock = threading.Lock()
 
-                for variant in checksum_variants:
-                    checksum_asset = next(
-                        (a for a in assets if a.get("name") == variant), None
-                    )
-                    typed_checksum = (
-                        self.to_github_asset(checksum_asset) if checksum_asset else None
-                    )
-                    if typed_checksum:
-                        filtered_assets.append(typed_checksum)
-                    else:
-                        print("Failed to convert checksum asset to GitHubAsset")
+# Tracks which filename should print on which line
+progress_lines: dict[str, int] = {}
 
-        return filtered_assets
 
-    def write_to_file(self, data: GitHubReleaseDetails, file_name: str) -> None:
-        with open(file_name, "wb") as file:
-            file.write(orjson.dumps(data, option=orjson.OPT_INDENT_2))
+class Installer:
+    _line_counter = 0
+
+    def __init__(self, asset: GitHubAsset) -> None:
+        self.asset = asset
+        self.filename = Path(urlparse(asset["browser_download_url"]).path).name
+
+        with progress_lock:
+            if self.filename not in progress_lines:
+                Installer._line_counter += 1
+                progress_lines[self.filename] = Installer._line_counter
+
+        # line relative to reserved block
+        self.line = progress_lines[self.filename]
+
+    def download(self) -> Path:
+        headers = GitHubAuthManager.apply_auth({})
+        response = requests.get(
+            url=self.asset["browser_download_url"], headers=headers, stream=True
+        )
+        response.raise_for_status()
+        total = int(response.headers.get("Content-Length", 0))
+        downloaded = 0
+        chunk_size = 8192
+
+        with open(self.filename, "wb") as f:
+            for chunk in response.iter_content(chunk_size=chunk_size):
+                if chunk:
+                    f.write(chunk)
+                    downloaded += len(chunk)
+                    self.print_progress(downloaded, total)
+
+        self.print_done()
+        return Path(self.filename)
+
+    def print_progress(self, downloaded: int, total: int) -> None:
+        percent = int(downloaded / total * 100) if total else 0
+        bar_length = 30
+        filled = int(bar_length * percent // 100)
+        bar = "#" * filled + "-" * (bar_length - filled)
+
+        with progress_lock:
+            sys.stdout.write(move_cursor(self.line, 0) + clear_line())
+            sys.stdout.write(f"{self.filename:<40} [{bar}] {percent:>3}%\n")
+            sys.stdout.flush()
+
+    def print_done(self) -> None:
+        # clear the progress bar when done
+        with progress_lock:
+            sys.stdout.flush()
+
+    def make_executable(self, path: Path) -> None:
+        os.chmod(path, 0o755)
+
+    def install(self) -> Path:
+        path = self.download()
+        self.make_executable(path)
+        return path
 
 
 class Verifier:
     def __init__(self, asset: GitHubAsset, file_path: Path) -> None:
-        self.asset: GitHubAsset = asset
-        self.file_path: Path = file_path
+        self.asset = asset
+        self.file_path = file_path
 
     def get_expected_hash(self) -> str:
-        prefix, _, hash_str = self.asset["digest"].partition(":")
-        if prefix != "sha256":
-            raise ValueError(f"Unsupported hash type: {prefix}")
-        return hash_str
+        algo, _, hash_value = self.asset["digest"].partition(":")
+        if algo != "sha256":
+            raise ValueError("Unsupported digest algorithm")
+        return hash_value
 
     def compute_actual_hash(self) -> str:
         sha256 = hashlib.sha256()
@@ -120,62 +145,139 @@ class Verifier:
                 sha256.update(chunk)
         return sha256.hexdigest()
 
-    def verify(self) -> bool:
-        expected: str = self.get_expected_hash()
-        actual: str = self.compute_actual_hash()
-        print(f"🔍 Expected Digest: {expected}")
-        print(f"🔍 Actual Digest:   {actual}")
+    def verify(self) -> None:
+        expected = self.get_expected_hash()
+        actual = self.compute_actual_hash()
         if expected != actual:
             raise ValueError(f"Digest mismatch!\nExpected: {expected}\nActual:   {actual}")
-        print("✅ SHA256 digest verified successfully.")
-        return True
 
 
-class Installer:
-    def __init__(self, asset: GitHubAsset) -> None:
-        self.asset: GitHubAsset = asset
-        self.file_name: str = Path(urlparse(asset["browser_download_url"]).path).name
+class GitHubAuthManager:
+    KEY_NAME: str = "github_appimage_installer"
 
-    def download(self) -> Path:
-        print(f"⬇️ Downloading {self.asset['name']} ...")
-        response = requests.get(self.asset["browser_download_url"], stream=True)
-        response.raise_for_status()
-        with open(self.file_name, "wb") as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-        print(f"✅ Downloaded to ./{self.file_name}")
-        return Path(self.file_name)
+    @staticmethod
+    def save_token() -> None:
+        token: str = getpass.getpass(prompt="Enter your GitHub token (input hidden): ")
+        keyring.set_password(GitHubAuthManager.KEY_NAME, "token", token)
+        print("✅ Token securely saved to keyring.")
 
-    def make_executable(self, path: Path) -> None:
-        os.chmod(path, 0o755)
-        print(f"🛠 Made executable: {path.resolve()}")
+    @staticmethod
+    def remove_token() -> None:
+        keyring.delete_password(GitHubAuthManager.KEY_NAME, "token")
+        print("🗑️ Token removed from keyring.")
 
-    def install(self) -> Path:
-        path = self.download()
-        self.make_executable(path)
-        return path
+    @staticmethod
+    def get_token() -> str | None:
+        return keyring.get_password(GitHubAuthManager.KEY_NAME, "token")
+
+    @staticmethod
+    def apply_auth(headers: dict[str, str]) -> dict[str, str]:
+        token: str | None = GitHubAuthManager.get_token()
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        return headers
+
+
+def move_cursor(row: int, col: int = 0) -> str:
+    return f"\033[{row};{col}H"
+
+
+def move_cursor_to_line(line: int) -> str:
+    # Move up N lines, then to beginning
+    return f"\033[{line}F"  # ANSI "Cursor to beginning of Nth previous line"
+
+
+def move_cursor_to_bottom() -> None:
+    sys.stdout.write("\033[999B")  # Move cursor way down
+    sys.stdout.flush()
+
+
+def clear_line() -> str:
+    return "\033[2K"
+
+
+# Reserve space at current position and track starting row
+def reserve_progress_lines(count: int) -> int:
+    print("\n" * count, end="")
+    sys.stdout.flush()
+    return count
+
+
+def install_and_verify_appimage(repo: str) -> tuple[str, str, bool]:
+    try:
+        owner, repo_name = repo.split("/", 1)
+        fetcher = GitHubReleaseFetcher(owner, repo_name)
+        release_data = fetcher.fetch_latest_release()
+
+        appimage = fetcher.extract_appimage_asset(release_data)
+        if not appimage:
+            return repo, "❌ No AppImage found", False
+
+        installer = Installer(appimage)
+        path = installer.install()
+
+        verifier = Verifier(appimage, path)
+        verifier.verify()
+
+        return repo, "✅ Downloaded and verified", True
+
+    except Exception as e:
+        return repo, f"❌ Failed: {e}", False
+
+
+def parse_cli_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Concurrent AppImage Installer")
+
+    parser.add_argument(
+        "--repo",
+        action="append",
+        help="GitHub repo in owner/repo format (can repeat)",
+    )
+    parser.add_argument("--concurrency", type=int, default=4, help="Max parallel installs")
+    parser.add_argument(
+        "--save-token", action="store_true", help="Save GitHub token to keyring"
+    )
+    parser.add_argument(
+        "--remove-token", action="store_true", help="Remove GitHub token from keyring"
+    )
+
+    args = parser.parse_args()
+
+    # Validate repo only if needed
+    if not args.save_token and not args.remove_token:
+        if not args.repo:
+            parser.error("--repo is required unless using --save-token or --remove-token")
+
+    return args
+
+
+def main():
+    args: argparse.Namespace = parse_cli_args()
+
+    if args.save_token:
+        GitHubAuthManager.save_token()
+        sys.exit(0)
+    elif args.remove_token:
+        GitHubAuthManager.remove_token()
+        sys.exit(0)
+
+    repos: list[str] = args.repo or []
+
+    move_cursor_to_bottom()
+
+    print("\n" * len(repos))  # reserve vertical space for progress bars
+
+    results: list[tuple[str, str, bool]] = []
+
+    with ThreadPoolExecutor(max_workers=args.concurrency) as executor:
+        futures = [executor.submit(install_and_verify_appimage, repo) for repo in repos]
+        for future in as_completed(futures):
+            results.append(future.result())
+
+    print("\n📦 Installation Summary:\n")
+    for repo, message, success in results:
+        print(f"{repo:<30} {message}")
 
 
 if __name__ == "__main__":
-    owner = "AppFlowy-IO"
-    repo = "AppFlowy"
-    output_file = "latest_release_details.json"
-
-    fetcher = GitHubReleaseFetcher(owner, repo)
-    try:
-        release_data = fetcher.fetch_latest_release()
-        asset_details = fetcher.extract_asset_details(release_data)
-        fetcher.write_to_file(asset_details, output_file)
-        print(f"📝 Asset details written to {output_file}")
-
-        for asset in asset_details["assets"]:
-            if asset["name"].endswith(".AppImage"):
-                installer = Installer(asset)
-                appimage_path = installer.install()
-
-                verifier = Verifier(asset, appimage_path)
-                verifier.verify()
-                break
-
-    except Exception as e:
-        print(f"❌ Error: {e}")
+    main()
