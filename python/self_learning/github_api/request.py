@@ -12,6 +12,9 @@ from urllib.parse import urlparse
 import keyring
 import requests
 
+# TODO: use asyncio for better performance
+# learn aiohttp
+
 
 class GitHubAsset(TypedDict):
     name: str
@@ -30,14 +33,16 @@ class GitHubReleaseDetails(TypedDict):
 
 class GitHubReleaseFetcher:
     def __init__(self, owner: str, repo: str) -> None:
-        self.owner = owner
-        self.repo = repo
-        self.auth_manager = GitHubAuthManager()
-        self.api_url = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
+        self.owner: str = owner
+        self.repo: str = repo
+        self.auth_manager: GitHubAuthManager = GitHubAuthManager()
+        self.api_url: str = (
+            f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
+        )
 
     def fetch_latest_release(self) -> GitHubReleaseDetails:
         headers = GitHubAuthManager.apply_auth({})
-        response: Response = requests.get(url=self.api_url, headers=headers)
+        response = requests.get(url=self.api_url, headers=headers)
         response.raise_for_status()
         return response.json()
 
@@ -52,7 +57,9 @@ class GitHubReleaseFetcher:
         except Exception:
             return None
 
-    def extract_appimage_asset(self, release_data: dict[str, Any]) -> GitHubAsset | None:
+    def extract_appimage_asset(
+        self, release_data: dict[str, Any]
+    ) -> GitHubAsset | None:
         assets = cast(list[dict[str, Any]], release_data.get("assets", []))
         for asset in assets:
             if asset.get("name", "").endswith(".AppImage"):
@@ -68,11 +75,11 @@ progress_lines: dict[str, int] = {}
 
 
 class Installer:
-    _line_counter = 0
+    _line_counter: int = 0
 
     def __init__(self, asset: GitHubAsset) -> None:
-        self.asset = asset
-        self.filename = Path(urlparse(asset["browser_download_url"]).path).name
+        self.asset: GitHubAsset = asset
+        self.filename: str = Path(urlparse(asset["browser_download_url"]).path).name
 
         with progress_lock:
             if self.filename not in progress_lines:
@@ -80,10 +87,10 @@ class Installer:
                 progress_lines[self.filename] = Installer._line_counter
 
         # line relative to reserved block
-        self.line = progress_lines[self.filename]
+        self.line: int = progress_lines[self.filename]
 
     def download(self) -> Path:
-        headers = GitHubAuthManager.apply_auth({})
+        headers: dict[str, str] = GitHubAuthManager.apply_auth({})
         response = requests.get(
             url=self.asset["browser_download_url"], headers=headers, stream=True
         )
@@ -129,8 +136,8 @@ class Installer:
 
 class Verifier:
     def __init__(self, asset: GitHubAsset, file_path: Path) -> None:
-        self.asset = asset
-        self.file_path = file_path
+        self.asset: GitHubAsset = asset
+        self.file_path: Path = file_path
 
     def get_expected_hash(self) -> str:
         algo, _, hash_value = self.asset["digest"].partition(":")
@@ -149,7 +156,9 @@ class Verifier:
         expected = self.get_expected_hash()
         actual = self.compute_actual_hash()
         if expected != actual:
-            raise ValueError(f"Digest mismatch!\nExpected: {expected}\nActual:   {actual}")
+            raise ValueError(
+                f"Digest mismatch!\nExpected: {expected}\nActual:   {actual}"
+            )
 
 
 class GitHubAuthManager:
@@ -233,7 +242,9 @@ def parse_cli_args() -> argparse.Namespace:
         action="append",
         help="GitHub repo in owner/repo format (can repeat)",
     )
-    parser.add_argument("--concurrency", type=int, default=4, help="Max parallel installs")
+    parser.add_argument(
+        "--concurrency", type=int, default=4, help="Max parallel installs"
+    )
     parser.add_argument(
         "--save-token", action="store_true", help="Save GitHub token to keyring"
     )
@@ -246,7 +257,9 @@ def parse_cli_args() -> argparse.Namespace:
     # Validate repo only if needed
     if not args.save_token and not args.remove_token:
         if not args.repo:
-            parser.error("--repo is required unless using --save-token or --remove-token")
+            parser.error(
+                "--repo is required unless using --save-token or --remove-token"
+            )
 
     return args
 
