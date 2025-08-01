@@ -1,19 +1,17 @@
 import argparse
+import asyncio
 import getpass
 import hashlib
 import os
 import sys
-import threading
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, TypedDict, cast
 from urllib.parse import urlparse
 
+import aiohttp
 import keyring
-import requests
-
-# TODO: use asyncio for better performance
-# learn aiohttp
+import uvloop
+from tqdm.asyncio import tqdm
 
 
 class GitHubAsset(TypedDict):
@@ -32,19 +30,18 @@ class GitHubReleaseDetails(TypedDict):
 
 
 class GitHubReleaseFetcher:
-    def __init__(self, owner: str, repo: str) -> None:
+    def __init__(self, owner: str, repo: str, session: aiohttp.ClientSession) -> None:
         self.owner: str = owner
         self.repo: str = repo
         self.auth_manager: GitHubAuthManager = GitHubAuthManager()
-        self.api_url: str = (
-            f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
-        )
+        self.api_url: str = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
+        self.session = session
 
-    def fetch_latest_release(self) -> GitHubReleaseDetails:
+    async def fetch_latest_release(self) -> GitHubReleaseDetails:
         headers = GitHubAuthManager.apply_auth({})
-        response = requests.get(url=self.api_url, headers=headers)
-        response.raise_for_status()
-        return response.json()
+        async with self.session.get(url=self.api_url, headers=headers) as response:
+            response.raise_for_status()
+            return await response.json()
 
     def to_github_asset(self, asset: dict[str, Any]) -> GitHubAsset | None:
         try:
@@ -57,9 +54,7 @@ class GitHubReleaseFetcher:
         except Exception:
             return None
 
-    def extract_appimage_asset(
-        self, release_data: dict[str, Any]
-    ) -> GitHubAsset | None:
+    def extract_appimage_asset(self, release_data: dict[str, Any]) -> GitHubAsset | None:
         assets = cast(list[dict[str, Any]], release_data.get("assets", []))
         for asset in assets:
             if asset.get("name", "").endswith(".AppImage"):
@@ -67,69 +62,39 @@ class GitHubReleaseFetcher:
         return None
 
 
-# Global lock to synchronize terminal output
-progress_lock = threading.Lock()
-
-# Tracks which filename should print on which line
-progress_lines: dict[str, int] = {}
-
-
 class Installer:
-    _line_counter: int = 0
-
-    def __init__(self, asset: GitHubAsset) -> None:
+    def __init__(self, asset: GitHubAsset, session: aiohttp.ClientSession) -> None:
         self.asset: GitHubAsset = asset
+        self.session = session
         self.filename: str = Path(urlparse(asset["browser_download_url"]).path).name
 
-        with progress_lock:
-            if self.filename not in progress_lines:
-                Installer._line_counter += 1
-                progress_lines[self.filename] = Installer._line_counter
-
-        # line relative to reserved block
-        self.line: int = progress_lines[self.filename]
-
-    def download(self) -> Path:
+    async def download(self) -> Path:
         headers: dict[str, str] = GitHubAuthManager.apply_auth({})
-        response = requests.get(
-            url=self.asset["browser_download_url"], headers=headers, stream=True
-        )
-        response.raise_for_status()
-        total = int(response.headers.get("Content-Length", 0))
-        downloaded = 0
-        chunk_size = 8192
+        async with self.session.get(
+            url=self.asset["browser_download_url"], headers=headers
+        ) as response:
+            response.raise_for_status()
+            total = int(response.headers.get("Content-Length", 0))
+            chunk_size = 8192
+            downloaded = 0
 
-        with open(self.filename, "wb") as f:
-            for chunk in response.iter_content(chunk_size=chunk_size):
-                if chunk:
-                    f.write(chunk)
-                    downloaded += len(chunk)
-                    self.print_progress(downloaded, total)
+            with (
+                open(self.filename, "wb") as f,
+                tqdm(total=total, unit="B", unit_scale=True, desc=self.filename) as pbar,
+            ):
+                async for chunk in response.content.iter_chunked(chunk_size):
+                    if chunk:
+                        f.write(chunk)
+                        downloaded += len(chunk)
+                        pbar.update(len(chunk))
 
-        self.print_done()
         return Path(self.filename)
-
-    def print_progress(self, downloaded: int, total: int) -> None:
-        percent = int(downloaded / total * 100) if total else 0
-        bar_length = 30
-        filled = int(bar_length * percent // 100)
-        bar = "#" * filled + "-" * (bar_length - filled)
-
-        with progress_lock:
-            sys.stdout.write(move_cursor(self.line, 0) + clear_line())
-            sys.stdout.write(f"{self.filename:<40} [{bar}] {percent:>3}%\n")
-            sys.stdout.flush()
-
-    def print_done(self) -> None:
-        # clear the progress bar when done
-        with progress_lock:
-            sys.stdout.flush()
 
     def make_executable(self, path: Path) -> None:
         os.chmod(path, 0o755)
 
-    def install(self) -> Path:
-        path = self.download()
+    async def install(self) -> Path:
+        path = await self.download()
         self.make_executable(path)
         return path
 
@@ -156,9 +121,7 @@ class Verifier:
         expected = self.get_expected_hash()
         actual = self.compute_actual_hash()
         if expected != actual:
-            raise ValueError(
-                f"Digest mismatch!\nExpected: {expected}\nActual:   {actual}"
-            )
+            raise ValueError(f"Digest mismatch!\nExpected: {expected}\nActual:   {actual}")
 
 
 class GitHubAuthManager:
@@ -187,43 +150,20 @@ class GitHubAuthManager:
         return headers
 
 
-def move_cursor(row: int, col: int = 0) -> str:
-    return f"\033[{row};{col}H"
-
-
-def move_cursor_to_line(line: int) -> str:
-    # Move up N lines, then to beginning
-    return f"\033[{line}F"  # ANSI "Cursor to beginning of Nth previous line"
-
-
-def move_cursor_to_bottom() -> None:
-    sys.stdout.write("\033[999B")  # Move cursor way down
-    sys.stdout.flush()
-
-
-def clear_line() -> str:
-    return "\033[2K"
-
-
-# Reserve space at current position and track starting row
-def reserve_progress_lines(count: int) -> int:
-    print("\n" * count, end="")
-    sys.stdout.flush()
-    return count
-
-
-def install_and_verify_appimage(repo: str) -> tuple[str, str, bool]:
+async def install_and_verify_appimage(
+    repo: str, session: aiohttp.ClientSession
+) -> tuple[str, str, bool]:
     try:
         owner, repo_name = repo.split("/", 1)
-        fetcher = GitHubReleaseFetcher(owner, repo_name)
-        release_data = fetcher.fetch_latest_release()
+        fetcher = GitHubReleaseFetcher(owner, repo_name, session)
+        release_data = await fetcher.fetch_latest_release()
 
         appimage = fetcher.extract_appimage_asset(release_data)
         if not appimage:
             return repo, "❌ No AppImage found", False
 
-        installer = Installer(appimage)
-        path = installer.install()
+        installer = Installer(appimage, session)
+        path = await installer.install()
 
         verifier = Verifier(appimage, path)
         verifier.verify()
@@ -242,9 +182,7 @@ def parse_cli_args() -> argparse.Namespace:
         action="append",
         help="GitHub repo in owner/repo format (can repeat)",
     )
-    parser.add_argument(
-        "--concurrency", type=int, default=4, help="Max parallel installs"
-    )
+    parser.add_argument("--concurrency", type=int, default=4, help="Max parallel installs")
     parser.add_argument(
         "--save-token", action="store_true", help="Save GitHub token to keyring"
     )
@@ -257,14 +195,12 @@ def parse_cli_args() -> argparse.Namespace:
     # Validate repo only if needed
     if not args.save_token and not args.remove_token:
         if not args.repo:
-            parser.error(
-                "--repo is required unless using --save-token or --remove-token"
-            )
+            parser.error("--repo is required unless using --save-token or --remove-token")
 
     return args
 
 
-def main():
+async def main():
     args: argparse.Namespace = parse_cli_args()
 
     if args.save_token:
@@ -276,16 +212,11 @@ def main():
 
     repos: list[str] = args.repo or []
 
-    move_cursor_to_bottom()
-
-    print("\n" * len(repos))  # reserve vertical space for progress bars
-
     results: list[tuple[str, str, bool]] = []
 
-    with ThreadPoolExecutor(max_workers=args.concurrency) as executor:
-        futures = [executor.submit(install_and_verify_appimage, repo) for repo in repos]
-        for future in as_completed(futures):
-            results.append(future.result())
+    async with aiohttp.ClientSession() as session:
+        tasks = [install_and_verify_appimage(repo, session) for repo in repos]
+        results = await asyncio.gather(*tasks)
 
     print("\n📦 Installation Summary:\n")
     for repo, message, success in results:
@@ -293,4 +224,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    uvloop.run(main())

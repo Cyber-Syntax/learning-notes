@@ -3,6 +3,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor
 
 import aiohttp
+import uvloop
 import keyring
 import requests
 
@@ -46,7 +47,7 @@ REPOS = [
     "ansible/ansible",
     "grafana/grafana",
 ]
-NUM_REQUESTS = 60
+NUM_REQUESTS = 10
 
 
 # --- Get Smallest Asset from Latest Release ---
@@ -159,7 +160,7 @@ def run_benchmark():
     start = time.perf_counter()
     print("Running asyncio benchmark for the selected asset...")
     print("Running asyncio benchmark for the selected asset...")
-    async_sizes = asyncio.run(async_benchmark(url, headers, NUM_REQUESTS))
+    async_sizes = uvloop.run(async_benchmark(url, headers, NUM_REQUESTS))
     async_time = time.perf_counter() - start
 
     # Validation
@@ -177,6 +178,13 @@ def run_benchmark():
     print("🏁", "Threaded" if thread_time < async_time else "Asyncio", "approach was faster")
 
     # Output
+    # 📊 Benchmark Results -> with uvloop 
+    # Threaded requests: 0.37 seconds
+    # Asyncio requests:  0.37 seconds
+    # Average speed (threads): 27.30 req/sec
+    # Average speed (async):   26.69 req/sec
+    # Performance difference: 0.01 seconds
+    # 🏁 Threaded approach was faster
     # 📊 Benchmark Results:
     # Threaded requests: 0.38 seconds
     # Asyncio requests:  0.38 seconds
