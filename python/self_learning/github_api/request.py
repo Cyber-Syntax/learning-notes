@@ -150,6 +150,55 @@ class GitHubAuthManager:
         return headers
 
 
+class CLI:
+    def __init__(self) -> None:
+        self.args = self.parse_cli_args()
+
+    def parse_cli_args(self) -> argparse.Namespace:
+        parser = argparse.ArgumentParser(description="Concurrent AppImage Installer")
+
+        parser.add_argument(
+            "--repo",
+            action="append",
+            help="GitHub repo in owner/repo format (can repeat)",
+        )
+        parser.add_argument("--concurrency", type=int, default=4, help="Max parallel installs")
+        parser.add_argument(
+            "--save-token", action="store_true", help="Save GitHub token to keyring"
+        )
+        parser.add_argument(
+            "--remove-token", action="store_true", help="Remove GitHub token from keyring"
+        )
+
+        args = parser.parse_args()
+
+        if not args.save_token and not args.remove_token:
+            if not args.repo:
+                parser.error("--repo is required unless using --save-token or --remove-token")
+
+        return args
+
+    async def run(self) -> None:
+        if self.args.save_token:
+            GitHubAuthManager.save_token()
+            sys.exit(0)
+        elif self.args.remove_token:
+            GitHubAuthManager.remove_token()
+            sys.exit(0)
+
+        repos: list[str] = self.args.repo or []
+
+        results: list[tuple[str, str, bool]] = []
+
+        async with aiohttp.ClientSession() as session:
+            tasks = [install_and_verify_appimage(repo, session) for repo in repos]
+            results = await asyncio.gather(*tasks)
+
+        print("\n📦 Installation Summary:\n")
+        for repo, message, success in results:
+            print(f"{repo:<30} {message}")
+
+
 async def install_and_verify_appimage(
     repo: str, session: aiohttp.ClientSession
 ) -> tuple[str, str, bool]:
@@ -174,54 +223,6 @@ async def install_and_verify_appimage(
         return repo, f"❌ Failed: {e}", False
 
 
-def parse_cli_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Concurrent AppImage Installer")
-
-    parser.add_argument(
-        "--repo",
-        action="append",
-        help="GitHub repo in owner/repo format (can repeat)",
-    )
-    parser.add_argument("--concurrency", type=int, default=4, help="Max parallel installs")
-    parser.add_argument(
-        "--save-token", action="store_true", help="Save GitHub token to keyring"
-    )
-    parser.add_argument(
-        "--remove-token", action="store_true", help="Remove GitHub token from keyring"
-    )
-
-    args = parser.parse_args()
-
-    # Validate repo only if needed
-    if not args.save_token and not args.remove_token:
-        if not args.repo:
-            parser.error("--repo is required unless using --save-token or --remove-token")
-
-    return args
-
-
-async def main():
-    args: argparse.Namespace = parse_cli_args()
-
-    if args.save_token:
-        GitHubAuthManager.save_token()
-        sys.exit(0)
-    elif args.remove_token:
-        GitHubAuthManager.remove_token()
-        sys.exit(0)
-
-    repos: list[str] = args.repo or []
-
-    results: list[tuple[str, str, bool]] = []
-
-    async with aiohttp.ClientSession() as session:
-        tasks = [install_and_verify_appimage(repo, session) for repo in repos]
-        results = await asyncio.gather(*tasks)
-
-    print("\n📦 Installation Summary:\n")
-    for repo, message, success in results:
-        print(f"{repo:<30} {message}")
-
-
 if __name__ == "__main__":
-    uvloop.run(main())
+    cli = CLI()
+    uvloop.run(cli.run())
