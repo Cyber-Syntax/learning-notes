@@ -1,6 +1,8 @@
 # Custom
 *.AppImage
 
+# ignore vscode
+.vscode
 
 ##### C++
 # Prerequisites
