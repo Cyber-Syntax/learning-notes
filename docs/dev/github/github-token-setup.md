@@ -2,26 +2,26 @@
 title: Github Token Setup
 id: github-token-setup
 last_update:
-    date: 08.15.2025
-    author: Cyber-Syntax
+  date: 05.21.2026
+  author: Cyber-Syntax
 publish:
-    date: 08.15.2025
+  date: 08.15.2025
 tags:
-    - git
-    - github
+  - git
+  - github
 ---
 
 <!-- TOC -->
 
-## How to setup fine grained token for authentication?
+## 1.Create fine grained token:
 
 1. Go github settings, developer settings, fine grained token.
 2. Generate token with permissions:
 
-- User perrmissions is not needed
+- User permissions is not needed
 - Those are the base ones needed:
 
-## PERMISSIONS
+### PERMISSIONS
 
 > Permissions for the fine grained github token
 
@@ -34,34 +34,28 @@ tags:
 
 - Commit statuses: Read and Write
 - Contents: Read and Write
-    - Commits, branches, downloads, releases and merges
+  - Commits, branches, downloads, releases and merges
 - Issues: Read and write
-    - For able to make github issue etc. via github cli or other apps
+  - For able to make github issue etc. via github cli or other apps
 - Pages: Read and write
-    - For github pages
+  - For github pages
 - Pull requests: Read and write
-    - For able to make github PR etc. via github cli or other apps
+  - For able to make github PR etc. via github cli or other apps
 - Workflows: Read and write
-    - [?] for able to make a configuration on workflow files like main.yml?
+  - [?] for able to make a configuration on workflow files like main.yml?
 - Metadata: Read-only (Already enabled because mandatory)
 
 ## How to not get asked all the time for password for token?
 
-> This happens sometimes when the cache broken on the linux
-> or via some updates, or token expration or something bug unknown...
->
-> NOTE: Remember, use token for password instead of github password
-> when you need to gave it to github cli setup
-
 ### Setting up for gnome keyring (Recomended for security)
 
+> [!NOTE]
 > This would save your token to your default keyring mostly named `login`
 > and you would be prompted from your polkit if you setup a password
 > for that keyring.
 >
 > I recommend you to setup a password(for linux: make it same password with your account to open auto when you login) for your keyring because
-> github tokens are basicly password which you need to treat them
-> like your personal passwords.
+> github tokens are basicly password which you need to treat them like your personal passwords.
 
 1. Setup credential helper to libsecret
 
@@ -75,26 +69,45 @@ git config --get credential.helper
 ```
 
 2. When the first initialization for the github like commit, push...
+   > [!NOTE]
+   > If you get ask more than ones; This happens sometimes when the cache broken on the linux
+   > or via some updates, or token expration or something else that I don't know now...
+   >
+   > Make sure to setup polkit for your desktop environment or window manager.
 
 ```bash
 username: <your_exact_github_username>
 password: <token_start_with_github_pat_12345>
 ```
 
-### Plain text save token (Bad security but works)
+> [!WARNING]
+> Remember, use github token for password section instead of github account password!
 
-```git
-git config --global credential.helper store
+### Using github cli for token handler
+
+1. Configure gh command authentication to use keyring:
+
+```bash
+# Create new txt file to write your fine grained token in it(I do this to note paste to terminal which don't want to deal with history of my zsh file):
+touch top-secret
+# authenticate gh
+gh auth login --git-protocol https --with-token < top-secret
+# test
+gh auth status
+
+# Example output:
+# github.com
+#   ✓ Logged in to github.com account Cyber-Syntax (keyring)
+#   - Active account: true
+#   - Git operations protocol: https
+#   - Token: github_pat_***********************************************************
 ```
 
-If you already have that and nothing happens than configure via plain text on `.git-credentials` this file:
+1. Configure git to use gh for getting token
 
-```git
-https://1123456:github_pat_1234567123456@github.com
+```bash
+gh auth setup-git
 ```
-
-- `1123456` -> represent github email(mine is private, that's why start with number) starting numbers
-- `github_pat_1234567123456` -> represent your token
 
 ## Base github config example
 
