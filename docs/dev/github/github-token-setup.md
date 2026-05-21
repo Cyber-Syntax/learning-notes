@@ -30,8 +30,6 @@ tags:
 > Those are the base general permission you probably
 > need to interact with your repo like push, commit, fetch etc.
 
-- [ ] WIP what are those permission exactly do?
-
 - Commit statuses: Read and Write
 - Contents: Read and Write
   - Commits, branches, downloads, releases and merges
@@ -42,7 +40,8 @@ tags:
 - Pull requests: Read and write
   - For able to make github PR etc. via github cli or other apps
 - Workflows: Read and write
-  - [?] for able to make a configuration on workflow files like main.yml?
+  - for able to make a configuration on workflow files like main.yml
+  - thats probably include reading status/logs of the actions that we able to see in web view
 - Metadata: Read-only (Already enabled because mandatory)
 
 ## How to not get asked all the time for password for token?
