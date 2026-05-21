@@ -1,0 +1,2166 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Cyber-Syntax Personal Notes">
+      
+      
+        <meta name="author" content="Cyber-Syntax">
+      
+      
+        <link rel="canonical" href="https://https:/cyber-syntax.github.io/learning-notes/dev/git/git-how-to/">
+      
+      
+        <link rel="prev" href="../bare-repo/">
+      
+      
+        <link rel="next" href="../git-leaks/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/pp.jpg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Git Fundamentals - Cyber-Syntax Personal Notes</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-to-get-removed-folderfiles-from-git" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Cyber-Syntax Personal Notes" class="md-header__button md-logo" aria-label="Cyber-Syntax Personal Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.1 5.52V1.5h-.18c-3.36.15-6.15 2.31-7.83 4.02l-.09.09-.09-.09C10.2 3.81 7.44 1.65 4.08 1.5H3.9v4.02H0v6.93c0 1.68.06 3.36.18 4.74a5.57 5.57 0 0 0 5.19 5.1c2.13.12 4.38.21 6.63.21s4.5-.09 6.63-.24a5.57 5.57 0 0 0 5.19-5.1c.12-1.38.18-3.06.18-4.74v-6.9zm0 6.93c0 1.59-.06 3.15-.18 4.41-.09.81-.75 1.47-1.56 1.5a90 90 0 0 1-12.72 0c-.81-.03-1.5-.69-1.56-1.5-.12-1.26-.18-2.85-.18-4.41V5.52c2.82.12 5.64 3.15 6.48 4.32L12 12.09l1.62-2.25c.84-1.2 3.66-4.2 6.48-4.32z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Cyber-Syntax Personal Notes
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Git Fundamentals
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="teal"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/Cyber-Syntax/learning-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Cyber-Syntax/learning-notes
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Cyber-Syntax Personal Notes" class="md-nav__button md-logo" aria-label="Cyber-Syntax Personal Notes" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.1 5.52V1.5h-.18c-3.36.15-6.15 2.31-7.83 4.02l-.09.09-.09-.09C10.2 3.81 7.44 1.65 4.08 1.5H3.9v4.02H0v6.93c0 1.68.06 3.36.18 4.74a5.57 5.57 0 0 0 5.19 5.1c2.13.12 4.38.21 6.63.21s4.5-.09 6.63-.24a5.57 5.57 0 0 0 5.19-5.1c.12-1.38.18-3.06.18-4.74v-6.9zm0 6.93c0 1.59-.06 3.15-.18 4.41-.09.81-.75 1.47-1.56 1.5a90 90 0 0 1-12.72 0c-.81-.03-1.5-.69-1.56-1.5-.12-1.26-.18-2.85-.18-4.41V5.52c2.82.12 5.64 3.15 6.48 4.32L12 12.09l1.62-2.25c.84-1.2 3.66-4.2 6.48-4.32z"/></svg>
+
+    </a>
+    Cyber-Syntax Personal Notes
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/Cyber-Syntax/learning-notes" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    Cyber-Syntax/learning-notes
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cyber-Syntax Personal Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dev
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Dev
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Git
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bare-repo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    git bare repository
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-get-removed-folderfiles-from-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to get removed folder/files from git
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to get removed folder/files from git">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-things-to-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Additional things to note
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-handle-2-branch-of-different-updates-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to handle 2 branch of different updates, changes ?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-fix-wrong-commit-headmessage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to fix wrong commit head/message
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-fix-when-you-merge-multiple-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to fix when you merge multiple commit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-commit-some-file-changes-but-revert-other-file-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to commit some file changes but revert other file changes?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-get-updates-from-main-repo-without-losing-your-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to get updates from main repo without losing your commits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-keep-readme-license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to keep README, LICENSE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-clone-specific-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to clone specific branch?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-updatecommit-push-merge-github-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to update(commit, push, merge) github projects?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revert-last-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revert last commit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-sync-fork-via-upstream-for-new-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to sync fork via upstream for new commits?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to sync fork via upstream for new commits?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-solve-1-commit-ahead-773-commit-behind-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to solve 1 commit ahead 773 commit behind master
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-solve-2-commit-behind-or-sync-to-branch-with-main-after-main-get-updated-from-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How solve 2 commit behind or sync to branch with main after main get updated from PR?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-squash-n-commits-to-1-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to squash N commits to 1 commit?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-sync-and-solve-commit-behind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to sync and solve commit behind
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-revert-back-without-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to revert back without commit?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-solve-169-commit-ahead-from-upstream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to solve 169 commit ahead from upstream?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git-leaks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to scan leaks on your repositories?
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../git-troubleshoots/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git Troubleshoots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Github
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Github
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../github/github-ssh-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Github SSH Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../github/github-token-setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Github Token Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Languages
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../languages/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Programming Languages Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_2" id="__nav_2_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C cpp
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C cpp
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../languages/c_cpp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../languages/c_cpp/C-learn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_3" id="__nav_2_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Javascript
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Javascript
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../languages/javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Index
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../languages/javascript/learn-javascript/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    JavaScript Review
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3_4" id="__nav_2_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Python
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../languages/python/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python Notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../languages/python/python-list/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python List
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Site generators
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Site generators
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../site-generators/docusaurus/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docusaurus
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../site-generators/mkdocs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MkDocs Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Workflow
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/dotfiles-management-stow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dotfiles Management with GNU Stow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-get-removed-folderfiles-from-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to get removed folder/files from git
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to get removed folder/files from git">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#additional-things-to-note" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Additional things to note
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-handle-2-branch-of-different-updates-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to handle 2 branch of different updates, changes ?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-fix-wrong-commit-headmessage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to fix wrong commit head/message
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-fix-when-you-merge-multiple-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to fix when you merge multiple commit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-commit-some-file-changes-but-revert-other-file-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to commit some file changes but revert other file changes?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-get-updates-from-main-repo-without-losing-your-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to get updates from main repo without losing your commits
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-keep-readme-license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to keep README, LICENSE
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-clone-specific-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to clone specific branch?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-updatecommit-push-merge-github-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to update(commit, push, merge) github projects?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revert-last-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revert last commit
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-sync-fork-via-upstream-for-new-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to sync fork via upstream for new commits?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to sync fork via upstream for new commits?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-to-solve-1-commit-ahead-773-commit-behind-master" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to solve 1 commit ahead 773 commit behind master
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-solve-2-commit-behind-or-sync-to-branch-with-main-after-main-get-updated-from-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How solve 2 commit behind or sync to branch with main after main get updated from PR?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-squash-n-commits-to-1-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to squash N commits to 1 commit?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-sync-and-solve-commit-behind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to sync and solve commit behind
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-revert-back-without-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to revert back without commit?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-solve-169-commit-ahead-from-upstream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to solve 169 commit ahead from upstream?
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/Cyber-Syntax/learning-notes/edit/main/docs/dev/git/git-how-to.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/Cyber-Syntax/learning-notes/raw/main/docs/dev/git/git-how-to.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+  <h1>Git Fundamentals</h1>
+
+<!-- TOC -->
+
+<h2 id="how-to-get-removed-folderfiles-from-git">How to get removed folder/files from git</h2>
+<p>You can absolutely restore a previously-removed folder from your repo’s history without losing the current branch’s changes. Here’s one clear way + some tips for your case (you removed a folder from your dotfiles and now want to bring it back).</p>
+<p>Assume the folder path is <code>path/to/folder</code> in your repo.</p>
+<ol>
+<li><strong>Stay on your current branch</strong> (so you keep all in-progress work).</li>
+<li>Find the commit where that folder was last present (just before deletion). For example:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>log<span class="w"> </span>--diff-filter<span class="o">=</span>D<span class="w"> </span>--summary<span class="w"> </span>--<span class="w"> </span>path/to/folder
+</span></code></pre></div>
+<p>This shows commits where files/folders were deleted. ([Better Stack][1])
+3. Note the commit hash (say it’s <code>abcd1234</code>) of the deletion. Then the parent commit (<code>abcd1234^</code>) is where the folder still existed.
+4. Restore the folder from that old commit into your working tree:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>abcd1234^<span class="w"> </span>--<span class="w"> </span>path/to/folder
+</span></code></pre></div>
+<p>This will bring the folder back into your working directory (but it’s not yet committed). ([Stack Overflow][2])
+5. You'll now have the folder <strong>and</strong> your current branch’s other changes intact. Stage and commit the restoration:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git<span class="w"> </span>add<span class="w"> </span>path/to/folder
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Restore folder path/to/folder from history&quot;</span>
+</span></code></pre></div>
+<ol>
+<li>Push, merge, whatever your workflow demands.</li>
+</ol>
+<h3 id="additional-things-to-note">🔍 Additional things to note</h3>
+<ul>
+<li>This method <strong>does not</strong> rewrite history (so safe in collaborative settings).</li>
+<li>If the folder has <strong>moved</strong> or renamed, you might want to preserve its original history (Git only tracks contents, not strictly folders). ([Reddit][3])</li>
+<li>If you want to bring back <em>just some files</em> from that folder (rather than everything) you can specify the file paths instead of the folder.</li>
+<li>If there were many commits that changed/removed parts of that folder, you may need to pick a commit where the state is what you want.</li>
+<li>If the deletion was a long time ago, you might use <code>git reflog</code> or similar to find the state. ([Smashing Magazine][4])</li>
+</ul>
+<h2 id="how-to-handle-2-branch-of-different-updates-changes">How to handle 2 branch of different updates, changes ?</h2>
+<ul>
+<li>if there is no conflict:</li>
+<li>test branch -&gt; updated etc. -&gt; old version 1.0.0</li>
+<li>fix/errors -&gt; updated etc. -&gt; merged to main with new version 1.0.1</li>
+<li>If there is no conflict, create a PR for test branch and merge directly
+you won't lose any new files added to main from fix/errors. - e.g pyproject.toml, changelog or any changes. -</li>
+</ul>
+<h2 id="how-to-fix-wrong-commit-headmessage">How to fix wrong commit head/message</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># Step 1: Start interactive rebase for the last commit
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git rebase -i HEAD~1
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a># Step 1: show this
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>pick abc1234 My incorrect commit message
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a># Step 2: make reword that commit in the first interactive git, it show that commit
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a># update the commit head and save :wq if nvim or vim used
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>reword abc1234 My incorrect commit message
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a># Step 3: Make sure changes are correct
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>git log
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a># Using --force-with-lease is safer—it prevents overwriting updates if someone else has pushed in the meantime
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>git push --force-with-lease
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a># Use this if above not work
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>git push --force
+</span></code></pre></div>
+<h2 id="how-to-fix-when-you-merge-multiple-commit">How to fix when you merge multiple commit</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># Reset to the commit before problems started
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git reset --hard 92a3206  # The changelog commit
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a># Force push when satisfied
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git push --force-with-lease
+</span></code></pre></div>
+<h2 id="how-to-commit-some-file-changes-but-revert-other-file-changes">How to commit some file changes but revert other file changes?</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a># If you git add . everything
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a># revert changes
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>git reset HEAD
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>git add &lt;files_you_want_to_add&gt;
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>git add .gitignore download.py main.py
+</span></code></pre></div>
+<h2 id="how-to-get-updates-from-main-repo-without-losing-your-commits">How to get updates from main repo without losing your commits</h2>
+<p>GitHub Copilot: If you want to get the latest commit from the original repository while keeping your changes, you can use <code>git pull</code>​ with the <code>--rebase</code>​ option. Here are the steps:</p>
+<ol>
+<li>First, make sure you are on the branch where you want to apply the updates:</li>
+</ol>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">git</span> <span class="n">checkout</span> <span class="o">&lt;</span><span class="n">your_branch</span><span class="o">&gt;</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">git</span> <span class="n">rebase</span> <span class="n">upstream</span><span class="o">/</span><span class="n">master</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">git</span> <span class="n">diff</span> <span class="n">origin</span><span class="o">/&lt;</span><span class="n">your_branch</span><span class="o">&gt;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># resolve conflict</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">git</span> <span class="n">add</span> <span class="o">&lt;</span><span class="n">file_with_resolved_conflict</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">git</span> <span class="n">rebase</span> <span class="o">--</span><span class="k">continue</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="o">&lt;</span><span class="n">your_branch</span><span class="o">&gt;</span> <span class="o">--</span><span class="n">force</span>
+</span></code></pre></div>
+<h2 id="how-to-keep-readme-license">How to keep README, LICENSE</h2>
+<blockquote>
+<p>[!INFO] files from deleted when merging new branch to main.</p>
+</blockquote>
+<ol>
+<li>
+<p>First, switch to the branch that you want to merge into <code>main</code>​:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>&lt;branch-name&gt;
+</span></code></pre></div>
+</li>
+<li>
+<p>Then, use the <code>checkout</code>​ command to get the <code>README</code>​ and <code>LICENSE</code>​ files from <code>main</code>​:</p>
+<ul>
+<li>This add README and LICENSE files to your bare-repo that you want to merge into main.</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>main<span class="w"> </span>--<span class="w"> </span>README<span class="w"> </span>LICENSE
+</span></code></pre></div>
+</li>
+<li>
+<p>If there are any conflicts, resolve them. Then, commit the changes:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </span><span class="s1">&#39;Merged branch and kept README and LICENSE files&#39;</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Finally, switch back to the <code>main</code>​ branch and merge the other branch:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>merge<span class="w"> </span>&lt;branch-name&gt;
+</span></code></pre></div>
+</li>
+</ol>
+<p>This way, the <code>README</code>​ and <code>LICENSE</code>​ files from <code>main</code>​ will be kept even after merging the other branch <a href="https://stackoverflow.com/questions/449541/how-can-i-selectively-merge-or-pick-changes-from-another-branch-in-git">Source 0</a>, <a href="https://pipinghot.dev/tutorial/merge-specific-files-from-git-branch/">Source 1</a>, <a href="https://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/">Source 3</a>.
+Another way to handle this situation is to use Git attributes. You can define a merge driver that always favors the current version of a file, and then use this driver for the files that you want to preserve. Here's how you can do it:</p>
+<ol>
+<li>
+<p>Define a merge driver that always favors the current version of a file:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>git<span class="w"> </span>git-bare<span class="w"> </span>--global<span class="w"> </span>merge.ours.driver<span class="w"> </span><span class="nb">true</span>
+</span></code></pre></div>
+</li>
+<li>
+<p>Add a <code>.gitattributes</code>​ file that tells Git to use the <code>ours</code>​ driver for the <code>README</code>​ and <code>LICENSE</code>​ files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;README merge=ours&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitattributes
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;LICENSE merge=ours&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.gitattributes
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>git<span class="w"> </span>add<span class="w"> </span>.gitattributes
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s1">&#39;chore: Preserve README and LICENSE files during merges&#39;</span>
+</span></code></pre></div>
+</li>
+</ol>
+<p>This will tell Git to use the <code>ours</code>​ driver (which always favors the current version of a file) when merging the <code>README</code>​ and <code>LICENSE</code>​ files <a href="https://medium.com/@porteneuve/how-to-make-git-preserve-specific-files-while-merging-18c92343826b">Source 2</a>.</p>
+<h2 id="how-to-clone-specific-branch">How to clone specific branch?</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>git clone -b bare-repo &lt;url&gt;
+</span></code></pre></div>
+<h2 id="how-to-updatecommit-push-merge-github-projects">How to update(commit, push, merge) github projects?</h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Update dev or enhancement branch</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>git<span class="w"> </span>status<span class="w"> </span><span class="c1">#to see modifications</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-am<span class="w"> </span><span class="s1">&#39;updated &lt;file_name&gt;&#39;</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>&lt;branch_name&gt;<span class="o">(</span>e.g<span class="w"> </span>enhancement<span class="w"> </span>or<span class="w"> </span>dev<span class="o">)</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># Merge changes to main</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>git<span class="w"> </span>merge<span class="w"> </span>enhancement
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
+</span></code></pre></div>
+<h2 id="revert-last-commit">Revert last commit</h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git revert HEAD
+</span></code></pre></div>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a> git revert --no-commit da65336                                                                                                                                         ─╯
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a> ~/Documents/repository/super-productivity on master revert +1
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a> git commit
+</span></code></pre></div>
+<h2 id="how-to-sync-fork-via-upstream-for-new-commits">How to sync fork via upstream for new commits?</h2>
+<blockquote>
+<p>Source: <a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork">github</a></p>
+</blockquote>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">git</span> <span class="n">checkout</span> <span class="n">master</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c1"># Get commits</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Rebase local branch to insert last commits from fetched upstream</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="n">git</span> <span class="n">rebase</span> <span class="n">upstream</span><span class="o">/</span><span class="n">master</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c1"># Push to your fork</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">master</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="c1"># or use alias</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="n">grebasemaster</span>
+</span></code></pre></div>
+<h3 id="how-to-solve-1-commit-ahead-773-commit-behind-master">How to solve 1 commit ahead 773 commit behind master</h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>warning: skipped previously applied commit 29541d699
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>hint: use --reapply-cherry-picks to include skipped commits
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>hint: Disable this message with &quot;git config set advice.skippedCherryPicks false&quot;
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Successfully rebased and updated refs/heads/master.
+</span></code></pre></div>
+<p>This happens when your commit was already on the remote master branch and your local master branch.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>grebasemaster
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>gpush_master_force_no_verify
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># original commands:</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>git<span class="w"> </span>fetch<span class="w"> </span>upstream
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>git<span class="w"> </span>rebase<span class="w"> </span>upstream/master
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="c1">#NOTE: No verify is specific to apps like super-productivity</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># because it is uses github action to start tests</span>
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>master<span class="w"> </span>--force<span class="w"> </span>--no-verify
+</span></code></pre></div>
+<h2 id="how-solve-2-commit-behind-or-sync-to-branch-with-main-after-main-get-updated-from-pr">How solve 2 commit behind or sync to branch with main after main get updated from PR?</h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>git<span class="w"> </span>fetch<span class="w"> </span>origin<span class="w"> </span>main
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>git<span class="w"> </span>checkout<span class="w"> </span>feat/extract
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>git<span class="w"> </span>rebase<span class="w"> </span>origin/main
+</span></code></pre></div>
+<h2 id="how-to-squash-n-commits-to-1-commit">How to squash N commits to 1 commit?</h2>
+<blockquote>
+<p>[!INFO] Resource: <a href="https://www.freecodecamp.org/news/git-squash-commits">freecodecamp</a></p>
+</blockquote>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Commits = 26</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="n">git</span> <span class="n">rebase</span> <span class="o">-</span><span class="n">i</span> <span class="n">HEAD</span><span class="o">~</span><span class="mi">26</span>
+</span></code></pre></div>
+<ul>
+<li>After that select the commit you want to make first commit with <code>pick</code> , make others <code>squash</code> or <code>s</code></li>
+<li>If you want to make 2 commit from 26 commit use <code>b</code> called <code>break</code> between 2 commit. After first commit done with rebase, <code>git rebase --continue</code> to handle second commit.</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">pick</span> <span class="n">adaafa495</span> <span class="n">fix</span><span class="p">:</span> <span class="n">settings</span> <span class="n">section</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">s</span> <span class="mi">49</span><span class="n">b1b4caa</span> <span class="n">fix</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">string</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="n">s</span> <span class="mi">8</span><span class="n">a34a3df0</span> <span class="n">fix</span><span class="p">:</span> <span class="n">update</span> <span class="n">changed</span> <span class="n">GITHUB</span> <span class="n">FORM</span> <span class="n">string</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="n">s</span> <span class="mi">7</span><span class="n">ba585e69</span> <span class="n">fix</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">strings</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="n">s</span> <span class="mi">11</span><span class="n">de85c4c</span> <span class="n">fix</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">CALDAV</span> <span class="n">strings</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="n">s</span> <span class="mi">360011</span><span class="n">b11</span> <span class="n">fix</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">GITEA</span> <span class="n">strings</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="n">s</span> <span class="n">d64180711</span> <span class="n">fix</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">unknown</span> <span class="n">FORM</span> <span class="n">string</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="n">s</span> <span class="n">d666891cb</span> <span class="n">fix</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">redmine</span> <span class="n">section</span> <span class="n">strings</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="n">s</span> <span class="mi">063898871</span> <span class="n">fix</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">OpenProject</span> <span class="n">strings</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="n">s</span> <span class="mf">69e698</span><span class="n">c38</span> <span class="n">fix</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">string</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="n">s</span> <span class="mi">6</span><span class="n">c9ccc810</span> <span class="n">fix</span><span class="err">!</span><span class="p">:</span> <span class="n">delete</span> <span class="n">unused</span> <span class="n">PP</span> <span class="n">strings</span>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="n">b</span>
+</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="n">pick</span> <span class="n">ee3562b7d</span> <span class="n">feat</span><span class="err">!</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">CALENDAR</span> <span class="n">strings</span>
+</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="n">s</span> <span class="mi">6104</span><span class="n">a1446</span> <span class="n">feat</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">DROPBOX</span> <span class="n">string</span>
+</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="n">s</span> <span class="n">ca7172528</span> <span class="n">feat</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">GITHUB</span> <span class="n">error</span> <span class="n">string</span>
+</span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="n">s</span> <span class="mi">230</span><span class="n">bfbcec</span> <span class="n">feat</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">ISSUE</span> <span class="n">strings</span>
+</span><span id="__span-22-17"><a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="n">s</span> <span class="mi">6</span><span class="n">dfa77741</span> <span class="n">feat</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">notes</span> <span class="n">section</span> <span class="n">strings</span>
+</span><span id="__span-22-18"><a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="n">s</span> <span class="mi">800</span><span class="n">edab2f</span> <span class="n">feat</span><span class="err">!</span><span class="p">:</span> <span class="n">add</span> <span class="n">PLANNER</span> <span class="n">strings</span>
+</span><span id="__span-22-19"><a id="__codelineno-22-19" name="__codelineno-22-19" href="#__codelineno-22-19"></a><span class="n">s</span> <span class="n">c164ace47</span> <span class="n">feat</span><span class="p">:</span> <span class="n">add</span> <span class="n">PROCRASTINATION</span> <span class="n">strings</span>
+</span><span id="__span-22-20"><a id="__codelineno-22-20" name="__codelineno-22-20" href="#__codelineno-22-20"></a><span class="n">s</span> <span class="mi">06</span><span class="n">c321b42</span> <span class="n">feat</span><span class="p">:</span> <span class="n">add</span> <span class="n">stopwatch</span> <span class="n">strings</span>
+</span><span id="__span-22-21"><a id="__codelineno-22-21" name="__codelineno-22-21" href="#__codelineno-22-21"></a><span class="n">s</span> <span class="mi">3</span><span class="n">ba1657f6</span> <span class="n">feat</span><span class="err">!</span><span class="p">:</span> <span class="n">add</span> <span class="n">SYNC</span> <span class="n">string</span>
+</span><span id="__span-22-22"><a id="__codelineno-22-22" name="__codelineno-22-22" href="#__codelineno-22-22"></a><span class="n">s</span> <span class="mi">6</span><span class="n">b43158e9</span> <span class="n">feat</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">strings</span>
+</span><span id="__span-22-23"><a id="__codelineno-22-23" name="__codelineno-22-23" href="#__codelineno-22-23"></a><span class="n">s</span> <span class="mi">07990</span><span class="n">c502</span> <span class="n">feat</span><span class="err">!</span><span class="p">:</span> <span class="n">add</span> <span class="n">CALENDARS</span> <span class="n">string</span>
+</span><span id="__span-22-24"><a id="__codelineno-22-24" name="__codelineno-22-24" href="#__codelineno-22-24"></a><span class="n">s</span> <span class="mi">071689691</span> <span class="n">feat</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">strings</span>
+</span><span id="__span-22-25"><a id="__codelineno-22-25" name="__codelineno-22-25" href="#__codelineno-22-25"></a><span class="n">s</span> <span class="n">e227c7580</span> <span class="n">fix</span><span class="p">:</span> <span class="n">translate</span> <span class="n">openproject</span> <span class="n">strings</span>
+</span><span id="__span-22-26"><a id="__codelineno-22-26" name="__codelineno-22-26" href="#__codelineno-22-26"></a><span class="n">s</span> <span class="n">fb01adc04</span> <span class="n">fix</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">strings</span>
+</span><span id="__span-22-27"><a id="__codelineno-22-27" name="__codelineno-22-27" href="#__codelineno-22-27"></a><span class="n">s</span> <span class="mi">92</span><span class="n">ed01bad</span> <span class="n">fix</span><span class="p">:</span> <span class="n">add</span> <span class="n">missing</span> <span class="n">REMINDER</span> <span class="n">strings</span>
+</span></code></pre></div>
+<ul>
+<li>update commit message for first commit e.g <code>fix!: delete unused strings</code></li>
+<li><code>git rebase --continue</code></li>
+<li>update commit message e.g <code>feat!: add missing strings</code></li>
+<li><code>git push origin turkish --force</code></li>
+</ul>
+<h2 id="how-to-sync-and-solve-commit-behind">How to sync and solve commit behind</h2>
+<blockquote>
+<p>[!INFO] how to fix 3 commit behind, 9 commit ahead.
+How to PR your commits to repo when your branch behind from some commits without losing your commits?</p>
+</blockquote>
+<ul>
+<li>Fetch updates to local from upstream, push updates to origin forked master branch, Rebase master to branch you want to add new updates from master and push force your branch</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># sync upstream master and push new commits to your fork</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="n">git</span> <span class="n">checkout</span> <span class="n">master</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="n">git</span> <span class="n">rebase</span> <span class="n">upstream</span><span class="o">/</span><span class="n">master</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">master</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="c1"># get latest updates from master and add your branch</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="n">git</span> <span class="n">checkout</span> <span class="n">turkish</span><span class="o">-</span><span class="n">update</span>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="n">git</span> <span class="n">rebase</span> <span class="n">master</span>
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">turkish</span><span class="o">-</span><span class="n">update</span> <span class="o">--</span><span class="n">force</span>
+</span></code></pre></div>
+<h2 id="how-to-revert-back-without-commit">How to revert back without commit?</h2>
+<blockquote>
+<p>[!INFO] Bununla commit hiç bir şekilde görünmez ve eklenen commit tamamen yok olur. Dikkatli ol.
+How to undo commits, revert back without commit to github like delete commit?</p>
+</blockquote>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># son commit resetle</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="n">git</span> <span class="n">reset</span> <span class="o">--</span><span class="n">hard</span> <span class="n">HEAD</span><span class="o">~</span><span class="mi">1</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="c1"># OUTPUT: HEAD is now at b8492fdd3 Fix SCHEDULE string and add new strings</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># push to your branch with force to not deal with conflict errors</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">turkish</span><span class="o">-</span><span class="n">fix</span> <span class="o">--</span><span class="n">force</span>
+</span></code></pre></div>
+<h2 id="how-to-solve-169-commit-ahead-from-upstream">How to solve 169 commit ahead from upstream?</h2>
+<ul>
+<li>This error going to show something like this <code>  ~/Doc/r/super-productivity on  @59f0afad rebase-i 6/164 ~1</code>. This is represent 164 commit conflict and git want it user to solve it.</li>
+<li>Abort this if your commit not necessary <code>git rebase --abort</code> and reset git and push changes to your forked master branch via force.</li>
+</ul>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">git</span> <span class="n">reset</span> <span class="o">--</span><span class="n">hard</span> <span class="n">upstream</span><span class="o">/</span><span class="n">master</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="c1"># Then it&#39;s going to show 169 commits is going to unstaged or revert via arrow down:</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="c1">#─   ~/Doc/r/super-productivity on   master ⇣169</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># After that force changes to fork.</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">master</span> <span class="o">--</span><span class="n">force</span>
+</span></code></pre></div>
+<ul>
+<li>Change the current working directory to your local project.</li>
+<li>Fetch the branches and their respective commits from the upstream repository. Commits to <code>BRANCHNAME</code>​​ will be stored in the local branch <code>upstream/BRANCHNAME</code>​​.</li>
+</ul>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>$<span class="w"> </span>git<span class="w"> </span>fetch<span class="w"> </span>upstream
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>&gt;<span class="w"> </span>remote:<span class="w"> </span>Counting<span class="w"> </span>objects:<span class="w"> </span><span class="m">75</span>,<span class="w"> </span><span class="k">done</span>.
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>&gt;<span class="w"> </span>remote:<span class="w"> </span>Compressing<span class="w"> </span>objects:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span><span class="o">(</span><span class="m">53</span>/53<span class="o">)</span>,<span class="w"> </span><span class="k">done</span>.
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>&gt;<span class="w"> </span>remote:<span class="w"> </span>Total<span class="w"> </span><span class="m">62</span><span class="w"> </span><span class="o">(</span>delta<span class="w"> </span><span class="m">27</span><span class="o">)</span>,<span class="w"> </span>reused<span class="w"> </span><span class="m">44</span><span class="w"> </span><span class="o">(</span>delta<span class="w"> </span><span class="m">9</span><span class="o">)</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>&gt;<span class="w"> </span>Unpacking<span class="w"> </span>objects:<span class="w"> </span><span class="m">100</span>%<span class="w"> </span><span class="o">(</span><span class="m">62</span>/62<span class="o">)</span>,<span class="w"> </span><span class="k">done</span>.
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>&gt;<span class="w"> </span>From<span class="w"> </span>https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a>&gt;<span class="w">  </span>*<span class="w"> </span><span class="o">[</span>new<span class="w"> </span>branch<span class="o">]</span><span class="w">      </span>main<span class="w">     </span>-&gt;<span class="w"> </span>upstream/main
+</span></code></pre></div>
+<ul>
+<li>Check out your fork's local default branch - in this case, we use <code>main</code>​​. It can be <code>master</code>​​ too</li>
+</ul>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>$<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>main
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>&gt;<span class="w"> </span>Switched<span class="w"> </span>to<span class="w"> </span>branch<span class="w"> </span><span class="s1">&#39;main&#39;</span>
+</span></code></pre></div>
+<ul>
+<li>Merge the changes from the upstream default branch - in this case, <code>upstream/main</code>​​  - into your local default branch. This brings your fork's default  branch into sync with the upstream repository, without losing your local  changes.</li>
+</ul>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>$<span class="w"> </span>git<span class="w"> </span>merge<span class="w"> </span>upstream/main
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>&gt;<span class="w"> </span>Updating<span class="w"> </span>a422352..5fdff0f
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>&gt;<span class="w"> </span>Fast-forward
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>&gt;<span class="w">  </span>README<span class="w">                    </span><span class="p">|</span><span class="w">    </span><span class="m">9</span><span class="w"> </span>-------
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>&gt;<span class="w">  </span>README.md<span class="w">                 </span><span class="p">|</span><span class="w">    </span><span class="m">7</span><span class="w"> </span>++++++
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>&gt;<span class="w">  </span><span class="m">2</span><span class="w"> </span>files<span class="w"> </span>changed,<span class="w"> </span><span class="m">7</span><span class="w"> </span>insertions<span class="o">(</span>+<span class="o">)</span>,<span class="w"> </span><span class="m">9</span><span class="w"> </span>deletions<span class="o">(</span>-<span class="o">)</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>&gt;<span class="w">  </span>delete<span class="w"> </span>mode<span class="w"> </span><span class="m">100644</span><span class="w"> </span>README
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>&gt;<span class="w">  </span>create<span class="w"> </span>mode<span class="w"> </span><span class="m">100644</span><span class="w"> </span>README.md
+</span></code></pre></div>
+<p>If your local branch didn't have any unique commits, Git will perform a fast-forward. For more information, see <a href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging">Basic Branching and Merging</a> in the Git documentation.</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>$<span class="w"> </span>git<span class="w"> </span>merge<span class="w"> </span>upstream/main
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>&gt;<span class="w"> </span>Updating<span class="w"> </span>34e91da..16c56ad
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>&gt;<span class="w"> </span>Fast-forward
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>&gt;<span class="w">  </span>README.md<span class="w">                 </span><span class="p">|</span><span class="w">    </span><span class="m">5</span><span class="w"> </span>+++--
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>&gt;<span class="w">  </span><span class="m">1</span><span class="w"> </span>file<span class="w"> </span>changed,<span class="w"> </span><span class="m">3</span><span class="w"> </span>insertions<span class="o">(</span>+<span class="o">)</span>,<span class="w"> </span><span class="m">2</span><span class="w"> </span>deletions<span class="o">(</span>-<span class="o">)</span>
+</span></code></pre></div>
+<p>If your local branch had unique commits, you may need to resolve conflicts. For more information, see "<a href="https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts">Addressing merge conflicts</a>."
+* Also if master has commit, you need to push to changes to your fork master</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>git push origin master
+</span></code></pre></div>
+<!-- /TOC -->
+
+
+
+
+
+
+
+  
+    
+  
+  
+    
+  
+
+
+  <aside class="md-source-file">
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Last update">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="May 21, 2026 15:30:15 UTC">May 21, 2026 15:30:15</span>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Created">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
+    </span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="May 21, 2026 15:30:15 UTC">May 21, 2026 15:30:15</span>
+  </span>
+
+    
+    
+      
+  
+  <span class="md-source-file__fact">
+    <span class="md-icon" title="Contributors">
+      
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
+      
+    </span>
+    <nav>
+      
+        <a href="mailto:115875369+cyber-syntax@users.noreply.github.com">Cyber-Syntax</a>
+    </nav>
+  </span>
+
+    
+    
+      
+  <span class="md-source-file__fact">
+    
+      
+  <span class="md-icon" title="Contributors">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </span>
+  <span>GitHub</span>
+
+    
+    <nav>
+      
+        <a href="https://github.com/Cyber-Syntax" class="md-author" title="@Cyber-Syntax">
+          
+          <img src="https://avatars.githubusercontent.com/u/115875369?v=4&size=72" alt="Cyber-Syntax">
+        </a>
+      
+      
+      
+    </nav>
+  </span>
+
+    
+  </aside>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 Cyber-Syntax.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "content.code.select", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
