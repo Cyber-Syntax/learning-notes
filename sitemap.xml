@@ -2,70 +2,82 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://https://cyber-syntax.github.io/learning-notes/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
+    </url>
+    <url>
+         <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/development/icon/</loc>
+         <lastmod>2026-06-19</lastmod>
+    </url>
+    <url>
+         <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/development/kde-development-guide/</loc>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/git/bare-repo/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/git/git-how-to/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/git/git-leaks/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/git/git-troubleshoots/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/github/github-ssh-setup/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/github/github-token-setup/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/languages/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/languages/c_cpp/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/languages/c_cpp/C-learn/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/languages/javascript/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/languages/javascript/learn-javascript/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/languages/python/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/languages/python/python-list/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/site-generators/docusaurus/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/site-generators/mkdocs/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
     </url>
     <url>
          <loc>https://https:/cyber-syntax.github.io/learning-notes/dev/workflow/dotfiles-management-stow/</loc>
-         <lastmod>2026-05-21</lastmod>
+         <lastmod>2026-06-19</lastmod>
+    </url>
+    <url>
+         <loc>https://https:/cyber-syntax.github.io/learning-notes/ossu/intro-cs/</loc>
+         <lastmod>2026-06-19</lastmod>
     </url>
 </urlset>
