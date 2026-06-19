@@ -1,14 +1,24 @@
 ---
-sidebar_position: 1
 title: Git Fundamentals
 id: git-how-to
-last_update:
-  date: 08/07/2025
+updated: 2026-06-19
 tags:
   - git
 ---
 
 <!-- TOC -->
+
+## How to see merge conflict for your branch?
+
+Assume you have hotfix branch that you want to merge to main but your changelog.md got conflict:
+
+- `git checkout hotfix`
+- `git merge origin/main` -> this would get all the changes on main to your hotfix branch
+- Open the changelog.md, you can see the <<<HEAD etc.
+- Make the changes by manually and remove <<HEAD, ==== etc.
+- Commit the changes as solve conflict
+- Push changes to origin
+- Now you solved your conflict
 
 ## How to get removed folder/files from git
 
@@ -24,6 +34,7 @@ Assume the folder path is `path/to/folder` in your repo.
    ```
 
    This shows commits where files/folders were deleted. ([Better Stack][1])
+
 3. Note the commit hash (say it’s `abcd1234`) of the deletion. Then the parent commit (`abcd1234^`) is where the folder still existed.
 4. Restore the folder from that old commit into your working tree:
 
@@ -32,6 +43,7 @@ Assume the folder path is `path/to/folder` in your repo.
    ```
 
    This will bring the folder back into your working directory (but it’s not yet committed). ([Stack Overflow][2])
+
 5. You'll now have the folder **and** your current branch’s other changes intact. Stage and commit the restoration:
 
    ```bash
@@ -43,19 +55,19 @@ Assume the folder path is `path/to/folder` in your repo.
 
 ### 🔍 Additional things to note
 
-* This method **does not** rewrite history (so safe in collaborative settings).
-* If the folder has **moved** or renamed, you might want to preserve its original history (Git only tracks contents, not strictly folders). ([Reddit][3])
-* If you want to bring back *just some files* from that folder (rather than everything) you can specify the file paths instead of the folder.
-* If there were many commits that changed/removed parts of that folder, you may need to pick a commit where the state is what you want.
-* If the deletion was a long time ago, you might use `git reflog` or similar to find the state. ([Smashing Magazine][4])
+- This method **does not** rewrite history (so safe in collaborative settings).
+- If the folder has **moved** or renamed, you might want to preserve its original history (Git only tracks contents, not strictly folders). ([Reddit][3])
+- If you want to bring back _just some files_ from that folder (rather than everything) you can specify the file paths instead of the folder.
+- If there were many commits that changed/removed parts of that folder, you may need to pick a commit where the state is what you want.
+- If the deletion was a long time ago, you might use `git reflog` or similar to find the state. ([Smashing Magazine][4])
 
 ## How to handle 2 branch of different updates, changes ?
 
-* if there is no conflict:
-  * test branch -> updated etc. -> old version 1.0.0
-  * fix/errors -> updated etc. -> merged to main with new version 1.0.1
-  * If there is no conflict, create a PR for test branch and merge directly
-you won't lose any new files added to main from fix/errors. - e.g pyproject.toml, changelog or any changes. -
+- if there is no conflict:
+  - test branch -> updated etc. -> old version 1.0.0
+  - fix/errors -> updated etc. -> merged to main with new version 1.0.1
+  - If there is no conflict, create a PR for test branch and merge directly
+    you won't lose any new files added to main from fix/errors. - e.g pyproject.toml, changelog or any changes. -
 
 ## How to fix wrong commit head/message
 
@@ -118,52 +130,52 @@ git push origin <your_branch> --force
 ```
 
 ## How to keep README, LICENSE
->
+
 > [!INFO] files from deleted when merging new branch to main.
 
 1. First, switch to the branch that you want to merge into `main`​:
 
-    ```bash
-    git checkout <branch-name>
-    ```
+   ```bash
+   git checkout <branch-name>
+   ```
 
 2. Then, use the `checkout`​ command to get the `README`​ and `LICENSE`​ files from `main`​:
-    * This add README and LICENSE files to your bare-repo that you want to merge into main.
+   - This add README and LICENSE files to your bare-repo that you want to merge into main.
 
-    ```bash
-    git checkout main -- README LICENSE
-    ```
+   ```bash
+   git checkout main -- README LICENSE
+   ```
 
 3. If there are any conflicts, resolve them. Then, commit the changes:
 
-    ```bash
-    git commit -am 'Merged branch and kept README and LICENSE files'
-    ```
+   ```bash
+   git commit -am 'Merged branch and kept README and LICENSE files'
+   ```
 
 4. Finally, switch back to the `main`​ branch and merge the other branch:
 
-    ```bash
-    git checkout main
-    git merge <branch-name>
-    ```
+   ```bash
+   git checkout main
+   git merge <branch-name>
+   ```
 
 This way, the `README`​ and `LICENSE`​ files from `main`​ will be kept even after merging the other branch [Source 0](https://stackoverflow.com/questions/449541/how-can-i-selectively-merge-or-pick-changes-from-another-branch-in-git), [Source 1](https://pipinghot.dev/tutorial/merge-specific-files-from-git-branch/), [Source 3](https://jasonrudolph.com/blog/2009/02/25/git-tip-how-to-merge-specific-files-from-another-branch/).
 Another way to handle this situation is to use Git attributes. You can define a merge driver that always favors the current version of a file, and then use this driver for the files that you want to preserve. Here's how you can do it:
 
 1. Define a merge driver that always favors the current version of a file:
 
-    ```bash
-    git git-bare --global merge.ours.driver true
-    ```
+   ```bash
+   git git-bare --global merge.ours.driver true
+   ```
 
 2. Add a `.gitattributes`​ file that tells Git to use the `ours`​ driver for the `README`​ and `LICENSE`​ files:
 
-    ```bash
-    echo 'README merge=ours' >> .gitattributes
-    echo 'LICENSE merge=ours' >> .gitattributes
-    git add .gitattributes
-    git commit -m 'chore: Preserve README and LICENSE files during merges'
-    ```
+   ```bash
+   echo 'README merge=ours' >> .gitattributes
+   echo 'LICENSE merge=ours' >> .gitattributes
+   git add .gitattributes
+   git commit -m 'chore: Preserve README and LICENSE files during merges'
+   ```
 
 This will tell Git to use the `ours`​ driver (which always favors the current version of a file) when merging the `README`​ and `LICENSE`​ files [Source 2](https://medium.com/@porteneuve/how-to-make-git-preserve-specific-files-while-merging-18c92343826b).
 
@@ -201,7 +213,7 @@ git revert HEAD
 ```
 
 ## How to sync fork via upstream for new commits?
->
+
 > Source: [github](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork)
 
 ```python
@@ -248,7 +260,7 @@ git rebase origin/main
 ```
 
 ## How to squash N commits to 1 commit?
->
+
 > [!INFO] Resource: [freecodecamp](https://www.freecodecamp.org/news/git-squash-commits)
 
 ```python
@@ -256,8 +268,8 @@ git rebase origin/main
 git rebase -i HEAD~26
 ```
 
-* After that select the commit you want to make first commit with `pick` , make others `squash` or `s`
-* If you want to make 2 commit from 26 commit use `b` called `break` between 2 commit. After first commit done with rebase, `git rebase --continue` to handle second commit.
+- After that select the commit you want to make first commit with `pick` , make others `squash` or `s`
+- If you want to make 2 commit from 26 commit use `b` called `break` between 2 commit. After first commit done with rebase, `git rebase --continue` to handle second commit.
 
 ```python
 pick adaafa495 fix: settings section
@@ -290,17 +302,17 @@ s 92ed01bad fix: add missing REMINDER strings
 
 ```
 
-* update commit message for first commit e.g `fix!: delete unused strings`
-* `git rebase --continue`
-* update commit message e.g `feat!: add missing strings`
-* `git push origin turkish --force`
+- update commit message for first commit e.g `fix!: delete unused strings`
+- `git rebase --continue`
+- update commit message e.g `feat!: add missing strings`
+- `git push origin turkish --force`
 
 ## How to sync and solve commit behind
->
+
 > [!INFO] how to fix 3 commit behind, 9 commit ahead.
 > How to PR your commits to repo when your branch behind from some commits without losing your commits?
 
-* Fetch updates to local from upstream, push updates to origin forked master branch, Rebase master to branch you want to add new updates from master and push force your branch
+- Fetch updates to local from upstream, push updates to origin forked master branch, Rebase master to branch you want to add new updates from master and push force your branch
 
 ```python
 # sync upstream master and push new commits to your fork
@@ -316,7 +328,7 @@ git push origin turkish-update --force
 ```
 
 ## How to revert back without commit?
->
+
 > [!INFO] Bununla commit hiç bir şekilde görünmez ve eklenen commit tamamen yok olur. Dikkatli ol.
 > How to undo commits, revert back without commit to github like delete commit?
 
@@ -330,8 +342,8 @@ git push origin turkish-fix --force
 
 ## How to solve 169 commit ahead from upstream?
 
-* This error going to show something like this `  ~/Doc/r/super-productivity on  @59f0afad rebase-i 6/164 ~1`. This is represent 164 commit conflict and git want it user to solve it.
-* Abort this if your commit not necessary `git rebase --abort` and reset git and push changes to your forked master branch via force.
+- This error going to show something like this `  ~/Doc/r/super-productivity on  @59f0afad rebase-i 6/164 ~1`. This is represent 164 commit conflict and git want it user to solve it.
+- Abort this if your commit not necessary `git rebase --abort` and reset git and push changes to your forked master branch via force.
 
 ```python
 git reset --hard upstream/master
@@ -341,8 +353,8 @@ git reset --hard upstream/master
 git push origin master --force
 ```
 
-* Change the current working directory to your local project.
-* Fetch the branches and their respective commits from the upstream repository. Commits to `BRANCHNAME`​​ will be stored in the local branch `upstream/BRANCHNAME`​​.
+- Change the current working directory to your local project.
+- Fetch the branches and their respective commits from the upstream repository. Commits to `BRANCHNAME`​​ will be stored in the local branch `upstream/BRANCHNAME`​​.
 
   ```shell
   $ git fetch upstream
@@ -354,14 +366,14 @@ git push origin master --force
   >  * [new branch]      main     -> upstream/main
   ```
 
-* Check out your fork's local default branch - in this case, we use `main`​​. It can be `master`​​ too
+- Check out your fork's local default branch - in this case, we use `main`​​. It can be `master`​​ too
 
   ```shell
   $ git checkout main
   > Switched to branch 'main'
   ```
 
-* Merge the changes from the upstream default branch - in this case, `upstream/main`​​  - into your local default branch. This brings your fork's default  branch into sync with the upstream repository, without losing your local  changes.
+- Merge the changes from the upstream default branch - in this case, `upstream/main`​​ - into your local default branch. This brings your fork's default branch into sync with the upstream repository, without losing your local changes.
 
   ```shell
   $ git merge upstream/main
@@ -385,7 +397,8 @@ git push origin master --force
   ```
 
   If your local branch had unique commits, you may need to resolve conflicts. For more information, see "[Addressing merge conflicts](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts)."
-* Also if master has commit, you need to push to changes to your fork master
+
+- Also if master has commit, you need to push to changes to your fork master
 
   ```git
   git push origin master

@@ -1,13 +1,13 @@
 ---
-sidebar_position: 3
-# slug: /docs/dev/git
 title: Git Troubleshoots
-# id: git2
+last_modified: 2026.05.22
+updated: 2026-05-22
 tags:
   - git
 ---
 
 <!-- TOC -->
+
 ## Updates were rejected because the remote contains work that you do not have locally
 
 ```git
@@ -54,13 +54,11 @@ From there, the utility belt that is git is at your disposal. For example, you c
 > or submodule error
 
 - Firstly rm with --cached command what it's suggested from error.
-
   - ```git
     git-bare rm -f --cached .git-bare/polybar
     ```
 
 - Don't forget to do from your main .git repo(e.g `git`​ instead of alias `git-bare`​), that's how I solve my problem:
-
   - ```python
     git rm --cached # general
     git rm -f --cached .git-bare/polybar # -f for force
