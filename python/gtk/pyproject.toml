@@ -1,0 +1,8 @@
+[project]
+name = "gtk-learn"
+version = "0.1.0"
+requires-python = ">=3.14"
+dependencies = ["pygobject>=3.56.3"]
+
+[dependency-groups]
+lint = ["ruff"]
