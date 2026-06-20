@@ -165,7 +165,20 @@ def create_task_card(task, source_column):
         )
         return Gdk.ContentProvider.new_for_value(payload)
 
+    def drag_begin(source, drag):
+        button.set_opacity(0.35)
+        # Create a paintable snapshot of the actual card
+        paintable = Gtk.WidgetPaintable.new(button)
+
+        # Use the card as drag icon
+        source.set_icon(
+            paintable,
+            button.get_width() // 2,
+            button.get_height() // 2,
+        )
+
     drag_source.connect("prepare", prepare_drag)
+    drag_source.connect("drag_begin", drag_begin)
     button.add_controller(drag_source)
 
     return button
@@ -265,6 +278,10 @@ class MyApplication(Gtk.Application):
 .muted {
     opacity: 0.7;
     font-size: 11px;
+}
+
+.drag-preview {
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
 }
 """
 
