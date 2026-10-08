@@ -28,6 +28,14 @@ Serve the documentation on localhost:
 uv run mkdocs serve --livereload
 ```
 
+## How to publish in gh-pages?
+
+Manually deploy the site to GitHub Pages:
+
+```bash
+uv run mkdocs gh-deploy --force
+```
+
 ## Custom Page
 
 Create folder for override html files:
@@ -43,12 +51,12 @@ touch overrides/home.html
 touch overrides/project.html
 ```
 
-#TODO: add direct file link
+# TODO: add direct file link
 Check the basic example in the my portfolio repo:
-https://github.com/Cyber-Syntax/cyber-syntax.github.io
+<https://github.com/Cyber-Syntax/cyber-syntax.github.io>
 
 Check the advanced example in binbashar's repo:
-https://github.com/binbashar/le-ref-architecture-doc/blob/master/material/overrides/main.html
+<https://github.com/binbashar/le-ref-architecture-doc/blob/master/material/overrides/main.html>
 
 Configure mkdocs.yml:
 

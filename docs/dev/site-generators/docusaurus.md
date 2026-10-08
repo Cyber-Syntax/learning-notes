@@ -2,8 +2,10 @@
 
 ## How to localhost
 
-- cd my-website
-- npm run start
+- cd cyber-syntax.github.io
+- remove node_module if you didn't used docusaurus over 1 month
+- update the docusaurus with yarn command to prevent `no command docusaurus` error
+- call `npm run start`
 
 ## If you want to add new blog, docs
 
@@ -60,15 +62,15 @@ and use only `dinodeploy` on your repository path
 title: Github Token Setup
 id: github-token-setup
 last_update:
-    date: 08.15.2025
-    author: Cyber-Syntax
+  date: 08.15.2025
+  author: Cyber-Syntax
 # This isn't working on the docusaurus front matter
 # but I use to track outdated content for my website
 publish:
-    date: 08.15.2025
+  date: 08.15.2025
 tags:
-    - git
-    - github
+  - git
+  - github
 ---
 ```
 
@@ -119,10 +121,10 @@ slug: /docs/Linux/Github/docusaurus
 title: Docusaurus
 id: docusaurus
 last_update:
-    date: 08.15.2025
-    author: Cyber-Syntax
+  date: 08.15.2025
+  author: Cyber-Syntax
 tags:
-    - github
+  - github
 ---
 
 <!-- TOC -->
