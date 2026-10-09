@@ -1,6 +1,6 @@
 ---
-sidebar_position: 2
-title: git bare repository
+sidebar_position: 4
+title: Git Bare Repository
 tags:
   - git
   - bare-repo

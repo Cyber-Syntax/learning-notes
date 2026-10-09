@@ -1,4 +1,5 @@
 ---
+sidebar_position: 2
 title: Git Troubleshoots
 last_modified: 2026.05.22
 updated: 2026-05-22

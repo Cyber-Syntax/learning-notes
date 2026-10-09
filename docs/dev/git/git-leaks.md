@@ -1,5 +1,6 @@
 ---
-title: How to scan leaks on your repositories?
+sidebar_position: 3
+title: Git Security
 id: git-leaks
 last_update:
   date: 06/06/2025

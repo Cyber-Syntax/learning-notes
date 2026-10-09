@@ -1,4 +1,5 @@
 ---
+sidebar_position: 1
 title: Git Fundamentals
 id: git-how-to
 updated: 2026-06-19
