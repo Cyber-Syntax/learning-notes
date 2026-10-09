@@ -8,6 +8,20 @@ tags:
 
 <!-- TOC -->
 
+## How to add one git project to another git project?
+
+- There is two answer: submodule or subtree
+- For me, I used subtree:
+  - Create src/github folder in your already exist repo (e.g linux-system-utils repo already has that for me)
+  - parsechangelog would already be created by the git command automatically.
+  - `git subtree add --prefix=src/github/parsechangelog https://github.com/Cyber-Syntax/parse-changelog.git main --squash`
+  - After you add it, last commit from parse-changelog would come to your repo.
+  - Now push the changes with `git push`
+  - Vola! Now, you got the exist github project parse-changelog to your exist linux-system-utils project.
+  - If you make changes on subtree directly on your parent like linux-system-utils, you need to push it with this command `git subtree push --prefix=src/github/parsechangelog https://github.com/Cyber-Syntax/parse-changelog.git main`
+  - After that you need to `git push` on your parent to also get the same commit changes.
+  - Now, both repo is updated from directly on your parent repo.
+
 ## How to see merge conflict for your branch?
 
 Assume you have hotfix branch that you want to merge to main but your changelog.md got conflict:
