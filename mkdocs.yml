@@ -76,6 +76,8 @@ plugins:
       repository: Cyber-Syntax/learning-notes
       branch: main
   - git-authors
+  - search
+  - mermaid2
 
 extra_css:
   - assets/stylesheets/extra.css
