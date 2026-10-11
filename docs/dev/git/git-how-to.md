@@ -2,6 +2,7 @@
 sidebar_position: 1
 title: Git Fundamentals
 id: git-how-to
+created: 2025-06-19
 updated: 2026-06-19
 tags:
   - git
