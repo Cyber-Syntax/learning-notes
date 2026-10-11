@@ -1,4 +1,10 @@
-# MkDocs Setup
+---
+title: MkDocs
+tags:
+  - site-generator
+---
+
+<!-- TOC -->
 
 ## Quick Start
 
@@ -51,7 +57,29 @@ touch overrides/home.html
 touch overrides/project.html
 ```
 
-# TODO: add direct file link
+## Templates
+
+### Wiki template
+
+```md
+---
+sidebar_position: 1
+title: Git Fundamentals
+id: git-how-to
+updated: 2026-06-19
+tags:
+  - git
+---
+
+<!-- TOC -->
+
+add the content here
+
+<!-- /TOC -->
+```
+
+## TODO: overrides
+
 Check the basic example in the my portfolio repo:
 <https://github.com/Cyber-Syntax/cyber-syntax.github.io>
 
@@ -62,7 +90,7 @@ Configure mkdocs.yml:
 
 ```yaml
 theme:
-    custom_dir: overrides
+  custom_dir: overrides
 ```
 
 Create md files for each custom page to be able to use custom html templates:
@@ -94,8 +122,10 @@ Add nav to `mkdocs.yml` to define the navigation structure:
 
 ```yaml
 nav:
-    - Home: "index.md"
-    - Projects: "portfolio/projects.md"
-    - Education: "portfolio/education.md"
-    - Dev: "dev/index.md"
+  - Home: "index.md"
+  - Projects: "portfolio/projects.md"
+  - Education: "portfolio/education.md"
+  - Dev: "dev/index.md"
 ```
+
+<!-- /TOC -->

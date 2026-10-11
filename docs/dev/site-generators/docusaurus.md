@@ -1,4 +1,10 @@
-# Docusaurus
+---
+title: Docusaurus
+tags:
+  - site-generator
+---
+
+<!-- TOC -->
 
 ## How to localhost
 
@@ -170,3 +176,5 @@ Content
 
 - Docusourus [Github page](https://github.com/facebook/docusaurus/blob/main/website/docs/api/misc/_category_.yml)
 - Tutorial [guide](https://docusaurus.io/docs/sidebar/multiple-sidebars)
+
+<!-- /TOC -->
