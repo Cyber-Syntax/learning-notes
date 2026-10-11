@@ -15,10 +15,10 @@
         <link rel="canonical" href="https://https:/cyber-syntax.github.io/learning-notes/dev/apps/borgbackup/">
       
       
-        <link rel="prev" href="../../..">
+        <link rel="prev" href="../backintime/">
       
       
-        <link rel="next" href="../../development/keepachangelog/">
+        <link rel="next" href="../syncthing/">
       
       
         
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#automate-with-anacron" class="md-skip">
+        <a href="#automate-with-systemd-services-recommended" class="md-skip">
           Skip to content
         </a>
       
@@ -346,6 +346,34 @@
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../backintime/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backintime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -355,8 +383,24 @@
       <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
       
       
-        
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BorgBackup
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
         
@@ -375,6 +419,189 @@
 
       </a>
       
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#automate-with-systemd-services-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automate with systemd services (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-check-for-errors-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to check for errors manually
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintainence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintainence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revert
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-see-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to see repositories?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-show-what-changes-happened-compare-with-other-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to show what changes happened, compare with other repo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-show-all-files-on-specific-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to show all files on specific repo?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-extract-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to extract file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to extract file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-alias-for-borg_repo-passpharse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup alias for borg_repo, passpharse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mount-repo-to-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mount repo to linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../syncthing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syncthing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1337,7 +1564,7 @@
   <span class="md-ellipsis">
     
   
-    MkDocs Setup
+    MkDocs
   
 
     
@@ -1466,8 +1693,152 @@
   
   
   
-    
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#automate-with-systemd-services-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automate with systemd services (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-check-for-errors-manually" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to check for errors manually
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#maintainence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Maintainence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revert" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Revert
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-see-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to see repositories?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-show-what-changes-happened-compare-with-other-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to show what changes happened, compare with other repo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-show-all-files-on-specific-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to show all files on specific repo?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-extract-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to extract file
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How to extract file">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-alias-for-borg_repo-passpharse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup alias for borg_repo, passpharse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparison-backups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison backups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mount-repo-to-linux" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mount repo to linux
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -1500,27 +1871,33 @@
   
 
 
+<!-- TOC -->
+
 <blockquote>
 <p>source: <a href="https://borgbackup.readthedocs.io/en/stable/faq.html">borgbackup.readthedocs.io</a></p>
 </blockquote>
-<h1 id="automate-with-anacron">Automate with anacron:</h1>
-<p><a href="11_System-Administrator/11.01_Linux/11.01a_Distro/Fedora/linux-services-cron_anacron.md">linux-services-cron_anacron</a></p>
-<h1 id="how-to-check-for-errors-manually">How to check for errors manually</h1>
+<h2 id="automate-with-systemd-services-recommended">Automate with systemd services (Recommended)</h2>
+<blockquote>
+<p>[!NOTE]
+This is the best version that is currently work as expected for non-root borg backups.</p>
+</blockquote>
+<p>Currently, <a href="https://github.com/Cyber-Syntax/auto-penguin-setup">auto-penguin-setup</a> project has the borgbackup systemd service with <a href="https://github.com/Cyber-Syntax/auto-penguin-setup/blob/main/src/aps/configs/borg-scripts/borg.sh">shell script</a> and setup everything automatically for home related documentation backups. Beware it won't do for root related backups.</p>
+<h2 id="how-to-check-for-errors-manually">How to check for errors manually</h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sudo<span class="w"> </span>/opt/borg/home-borgbackup.sh<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>/tmp/borg-debug.log
 </span></code></pre></div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>borg<span class="w"> </span>check<span class="w"> </span>--repair<span class="w"> </span>-v<span class="w"> </span>--progress
 </span></code></pre></div>
-<h1 id="maintainence">Maintainence</h1>
+<h2 id="maintainence">Maintainence</h2>
 <blockquote>
 <p>Clearing all indexes and caches and running borg check was also to get consistence back and have some confidence that everything actually is consistent.</p>
 </blockquote>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>borg<span class="w"> </span>delete<span class="w"> </span>--cache-only<span class="w"> </span>REPO<span class="w"> </span><span class="c1"># get rid of client-side cache</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>borg<span class="w"> </span>check<span class="w"> </span>--repair<span class="w"> </span>-v<span class="w"> </span>--progress
 </span></code></pre></div>
-<h1 id="revert">Revert</h1>
+<h2 id="revert">Revert</h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>borg<span class="w"> </span>extract<span class="w"> </span>--progress<span class="w"> </span>--list<span class="w"> </span>/mnt/backups/borgbackup/root-repo::Today-26-02-2024
 </span></code></pre></div>
-<h1 id="create">Create</h1>
+<h2 id="create">Create</h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">borg</span> <span class="n">init</span> <span class="o">--</span><span class="n">encryption</span><span class="o">=</span><span class="n">none</span> <span class="o">/</span><span class="n">media</span><span class="o">/</span><span class="n">backups</span><span class="o">/</span><span class="n">home</span><span class="o">-</span><span class="n">repo</span>
 </span></code></pre></div>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>borg<span class="w"> </span>create<span class="w"> </span>/media/backups/home-repo::main<span class="w"> </span>/home/developer/*
@@ -1530,7 +1907,7 @@
 <ul>
 <li>AME for --list option to see only added, modified, error happened reading file.</li>
 </ul>
-<h1 id="how-to-see-repositories">How to see repositories?</h1>
+<h2 id="how-to-see-repositories">How to see repositories?</h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>borg<span class="w"> </span>list<span class="w"> </span>&lt;repo_location&gt;
 </span></code></pre></div>
 <h2 id="how-to-show-what-changes-happened-compare-with-other-repo">How to show what changes happened, compare with other repo</h2>
@@ -1561,17 +1938,18 @@
 </span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># fix the permission issue with this:</span>
 </span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="n">sudo</span> <span class="n">chmod</span> <span class="mi">755</span> <span class="o">-</span><span class="n">R</span> <span class="o">./</span><span class="n">home</span><span class="o">/*</span>
 </span></code></pre></div>
-<h1 id="setup-alias-for-borg_repo-passpharse">Setup alias for borg_repo, passpharse</h1>
+<h2 id="setup-alias-for-borg_repo-passpharse">Setup alias for borg_repo, passpharse</h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>export BORG_REPO = '/media/backups/borgrepo'
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>export BORG_PASSPHRASE='1234'
 </span></code></pre></div>
-<h1 id="comparison-backups">Comparison backups</h1>
+<h2 id="comparison-backups">Comparison backups</h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>borg diff &lt;repo&gt;::Tuesday Monday
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>output: add 20B Wallpaper/newfile.txt
 </span></code></pre></div>
-<h1 id="mount-repo-to-linux">Mount repo to linux</h1>
+<h2 id="mount-repo-to-linux">Mount repo to linux</h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>borg mount :: /tmp/mount
 </span></code></pre></div>
+<!-- /TOC -->
 
 
 
@@ -1594,7 +1972,7 @@
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="October 11, 2026 10:10:46 UTC">October 11, 2026 10:10:46</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="October 11, 2026 12:42:32 UTC">October 11, 2026 12:42:32</span>
   </span>
 
     
@@ -1604,7 +1982,7 @@
     <span class="md-icon" title="Created">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14.47 15.08 11 13V7h1.5v5.25l3.08 1.83c-.41.28-.79.62-1.11 1m-1.39 4.84c-.36.05-.71.08-1.08.08-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8c0 .37-.03.72-.08 1.08.69.1 1.33.32 1.92.64.1-.56.16-1.13.16-1.72 0-5.5-4.5-10-10-10S2 6.5 2 12s4.47 10 10 10c.59 0 1.16-.06 1.72-.16-.32-.59-.54-1.23-.64-1.92M18 15v3h-3v2h3v3h2v-3h3v-2h-3v-3z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="October 11, 2026 10:10:46 UTC">October 11, 2026 10:10:46</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-datetime" title="October 11, 2026 11:50:05 UTC">October 11, 2026 11:50:05</span>
   </span>
 
     
@@ -1614,15 +1992,39 @@
   <span class="md-source-file__fact">
     <span class="md-icon" title="Contributors">
       
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 5.5A3.5 3.5 0 0 1 15.5 9a3.5 3.5 0 0 1-3.5 3.5A3.5 3.5 0 0 1 8.5 9 3.5 3.5 0 0 1 12 5.5M5 8c.56 0 1.08.15 1.53.42-.15 1.43.27 2.85 1.13 3.96C7.16 13.34 6.16 14 5 14a3 3 0 0 1-3-3 3 3 0 0 1 3-3m14 0a3 3 0 0 1 3 3 3 3 0 0 1-3 3c-1.16 0-2.16-.66-2.66-1.62a5.54 5.54 0 0 0 1.13-3.96c.45-.27.97-.42 1.53-.42M5.5 18.25c0-2.07 2.91-3.75 6.5-3.75s6.5 1.68 6.5 3.75V20h-13zM0 20v-1.5c0-1.39 1.89-2.56 4.45-2.9-.59.68-.95 1.62-.95 2.65V20zm24 0h-3.5v-1.75c0-1.03-.36-1.97-.95-2.65 2.56.34 4.45 1.51 4.45 2.9z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 4a4 4 0 0 1 4 4 4 4 0 0 1-4 4 4 4 0 0 1-4-4 4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4"/></svg>
       
     </span>
     <nav>
       
+        <a href="mailto:115875369+cyber-syntax@users.noreply.github.com">Cyber-Syntax</a>
     </nav>
   </span>
 
     
+    
+      
+  <span class="md-source-file__fact">
+    
+      
+  <span class="md-icon" title="Contributors">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </span>
+  <span>GitHub</span>
+
+    
+    <nav>
+      
+        <a href="https://github.com/Cyber-Syntax" class="md-author" title="@Cyber-Syntax">
+          
+          <img src="https://avatars.githubusercontent.com/u/115875369?v=4&size=72" alt="Cyber-Syntax">
+        </a>
+      
+      
+      
+    </nav>
+  </span>
+
     
   </aside>
 
