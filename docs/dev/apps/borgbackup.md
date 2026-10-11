@@ -13,11 +13,7 @@ tags:
 
 Currently, [auto-penguin-setup](https://github.com/Cyber-Syntax/auto-penguin-setup) project has the borgbackup systemd service with [shell script](https://github.com/Cyber-Syntax/auto-penguin-setup/blob/main/src/aps/configs/borg-scripts/borg.sh) and setup everything automatically for home related documentation backups. Beware it won't do for root related backups.
 
-# Automate with anacron:
-
-[linux-services-cron_anacron](11_System-Administrator/11.01_Linux/11.01a_Distro/Fedora/linux-services-cron_anacron.md)
-
-# How to check for errors manually
+## How to check for errors manually
 
 ```bash
 sudo /opt/borg/home-borgbackup.sh 2>&1 | tee /tmp/borg-debug.log
@@ -27,7 +23,7 @@ sudo /opt/borg/home-borgbackup.sh 2>&1 | tee /tmp/borg-debug.log
 borg check --repair -v --progress
 ```
 
-# Maintainence
+## Maintainence
 
 > Clearing all indexes and caches and running borg check was also to get consistence back and have some confidence that everything actually is consistent.
 
@@ -36,13 +32,13 @@ borg delete --cache-only REPO # get rid of client-side cache
 borg check --repair -v --progress
 ```
 
-# Revert
+## Revert
 
 ```bash
 sudo borg extract --progress --list /mnt/backups/borgbackup/root-repo::Today-26-02-2024
 ```
 
-# Create
+## Create
 
 ```python
 borg init --encryption=none /media/backups/home-repo
@@ -58,7 +54,7 @@ sudo borg create --list --filter=AME --progress --stats --exclude-from my_exclud
 
 - AME for --list option to see only added, modified, error happened reading file.
 
-# How to see repositories?
+## How to see repositories?
 
 ```bash
 borg list <repo_location>
@@ -102,21 +98,21 @@ sudo borg extract /mnt/backups/borgbackup/home::home-backup-19-06-2026 home/deve
 sudo chmod 755 -R ./home/*
 ```
 
-# Setup alias for borg_repo, passpharse
+## Setup alias for borg_repo, passpharse
 
 ```git
 export BORG_REPO = '/media/backups/borgrepo'
 export BORG_PASSPHRASE='1234'
 ```
 
-# Comparison backups
+## Comparison backups
 
 ```git
 borg diff <repo>::Tuesday Monday
 output: add 20B Wallpaper/newfile.txt
 ```
 
-# Mount repo to linux
+## Mount repo to linux
 
 ```pytohn
 borg mount :: /tmp/mount
