@@ -4,6 +4,8 @@ tags:
   - backup
 ---
 
+<!-- TOC -->
+
 > source: [borgbackup.readthedocs.io](https://borgbackup.readthedocs.io/en/stable/faq.html)
 
 ## Automate with systemd services (Recommended)
@@ -117,3 +119,5 @@ output: add 20B Wallpaper/newfile.txt
 ```pytohn
 borg mount :: /tmp/mount
 ```
+
+<!-- /TOC -->
